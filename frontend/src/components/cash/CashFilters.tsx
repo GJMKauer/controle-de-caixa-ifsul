@@ -64,8 +64,8 @@ export default function CashFilters(props: CashFiltersProps) {
     >
       <TextField
         InputLabelProps={{ shrink: true }}
-        label="De"
         inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
+        label="De"
         onChange={(event) => handleFromChange(event.target.value)}
         placeholder="DD/MM/AAAA"
         type="text"
@@ -73,8 +73,8 @@ export default function CashFilters(props: CashFiltersProps) {
       />
       <TextField
         InputLabelProps={{ shrink: true }}
-        label="Até"
         inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
+        label="Até"
         onChange={(event) => handleToChange(event.target.value)}
         placeholder="DD/MM/AAAA"
         type="text"

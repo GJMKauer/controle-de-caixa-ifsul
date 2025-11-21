@@ -14,7 +14,7 @@ import { capitalize, formatCurrency, formatDate } from "../../utils/formatters";
 
 export interface CashTableProps {
   emptyMessage?: string;
-  movements: Movement[];
+  movements: Array<Movement>;
 }
 
 /** Retorna o texto amigável para o tipo da movimentação.

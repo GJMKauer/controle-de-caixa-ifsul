@@ -16,10 +16,10 @@ import { Account, Movement, MovementPayload, Product } from "../types/cash";
  * @returns Estrutura com filtros, tabela e formulário de criação.
  */
 export default function MovementsPage() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accounts, setAccounts] = useState<Array<Account>>([]);
   const [filters, setFilters] = useState<MovementFilters>({});
-  const [movements, setMovements] = useState<Movement[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [movements, setMovements] = useState<Array<Movement>>([]);
+  const [products, setProducts] = useState<Array<Product>>([]);
 
   /** Busca movimentações conforme filtros ativos.
    * @param currentFilters - Filtros opcionais.

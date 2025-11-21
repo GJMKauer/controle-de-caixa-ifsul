@@ -9,7 +9,7 @@ import { formatCurrency, getTodayInputDate } from "../utils/formatters";
  * @returns Cartões de resumo e saldos de contas.
  */
 export default function DashboardPage() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accounts, setAccounts] = useState<Array<Account>>([]);
   const [summary, setSummary] = useState<Summary>({
     balance: 0,
     movements: [],
@@ -44,8 +44,8 @@ export default function DashboardPage() {
         </Typography>
       </Stack>
       <Alert severity="info" variant="outlined">
-        Os dados iniciais exibidos são mockados; assim que você registrar uma nova movimentação,
-        apenas os dados reais passam a ser considerados.
+        Os dados iniciais exibidos são mockados; assim que você registrar uma
+        nova movimentação, apenas os dados reais passam a ser considerados.
       </Alert>
       <Box
         display="grid"

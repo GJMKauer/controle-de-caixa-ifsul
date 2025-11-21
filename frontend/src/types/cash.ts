@@ -21,7 +21,7 @@ export interface MovementPayload {
 
 export interface Summary {
   balance: number;
-  movements: Movement[];
+  movements: Array<Movement>;
   totalIncome: number;
   totalOutcome: number;
 }

@@ -17,9 +17,9 @@ import {
 import { getTodayInputDate, normalizeDate } from "../../utils/formatters";
 
 export interface CashFormProps {
-  accounts: Account[];
+  accounts: Array<Account>;
   onSubmit: (movement: MovementPayload) => Promise<void> | void;
-  products: Product[];
+  products: Array<Product>;
 }
 
 /**  Formulário para criação de novas movimentações de caixa.

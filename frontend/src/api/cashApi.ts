@@ -1,5 +1,11 @@
 import { httpClient } from "./httpClient";
-import { Account, Movement, MovementPayload, Product, Summary } from "../types/cash";
+import {
+  Account,
+  Movement,
+  MovementPayload,
+  Product,
+  Summary,
+} from "../types/cash";
 
 export interface MovementFilters {
   from?: string;
@@ -10,8 +16,12 @@ export interface MovementFilters {
  * @param filters - Datas inicial e final.
  * @returns Movimentações retornadas pela API.
  */
-const listMovements = async (filters?: MovementFilters): Promise<Movement[]> => {
-  const response = await httpClient.get<Movement[]>("/movements", { params: filters });
+const listMovements = async (
+  filters?: MovementFilters
+): Promise<Array<Movement>> => {
+  const response = await httpClient.get<Array<Movement>>("/movements", {
+    params: filters,
+  });
 
   return response.data;
 };
@@ -31,7 +41,9 @@ const createMovement = async (payload: MovementPayload): Promise<Movement> => {
  * @returns Totais do dia.
  */
 const getDailySummary = async (date: string): Promise<Summary> => {
-  const response = await httpClient.get<Summary>("/summary/daily", { params: { date } });
+  const response = await httpClient.get<Summary>("/summary/daily", {
+    params: { date },
+  });
 
   return response.data;
 };
@@ -41,8 +53,13 @@ const getDailySummary = async (date: string): Promise<Summary> => {
  * @param to - Data final.
  * @returns Totais do intervalo.
  */
-const getPeriodSummary = async (from?: string, to?: string): Promise<Summary> => {
-  const response = await httpClient.get<Summary>("/summary/period", { params: { from, to } });
+const getPeriodSummary = async (
+  from?: string,
+  to?: string
+): Promise<Summary> => {
+  const response = await httpClient.get<Summary>("/summary/period", {
+    params: { from, to },
+  });
 
   return response.data;
 };
@@ -50,8 +67,8 @@ const getPeriodSummary = async (from?: string, to?: string): Promise<Summary> =>
 /** Lista contas contábeis.
  * @returns Contas com saldos.
  */
-const getAccounts = async (): Promise<Account[]> => {
-  const response = await httpClient.get<Account[]>("/accounts");
+const getAccounts = async (): Promise<Array<Account>> => {
+  const response = await httpClient.get<Array<Account>>("/accounts");
 
   return response.data;
 };
@@ -59,10 +76,17 @@ const getAccounts = async (): Promise<Account[]> => {
 /** Lista produtos mockados.
  * @returns Produtos disponíveis.
  */
-const getProducts = async (): Promise<Product[]> => {
-  const response = await httpClient.get<Product[]>("/products");
+const getProducts = async (): Promise<Array<Product>> => {
+  const response = await httpClient.get<Array<Product>>("/products");
 
   return response.data;
 };
 
-export { createMovement, getAccounts, getDailySummary, getPeriodSummary, getProducts, listMovements };
+export {
+  createMovement,
+  getAccounts,
+  getDailySummary,
+  getPeriodSummary,
+  getProducts,
+  listMovements,
+};
