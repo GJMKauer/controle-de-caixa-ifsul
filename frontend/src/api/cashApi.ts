@@ -27,7 +27,7 @@ const createMovement = async (payload: MovementPayload): Promise<Movement> => {
 };
 
 /** Obtém resumo diário.
- * @param date - Data no formato YYYY-MM-DD.
+ * @param date - Data no formato dd/MM/yyyy.
  * @returns Totais do dia.
  */
 const getDailySummary = async (date: string): Promise<Summary> => {

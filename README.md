@@ -47,7 +47,7 @@ A API é exposta em `http://localhost:3001/api` e o frontend em `http://localhos
 - **Registrar entradas e saídas:** formulário em Movimentações permite escolher tipo (entrada/saída), data, valor, conta contábil e produto opcional. O lançamento atualiza imediatamente os saldos das contas.
 - **Dashboard diário:** mostra total de entradas, saídas e saldo do dia atual, além dos saldos por conta.
 - **Relatórios por período:** selecione intervalo de datas para ver listagem de movimentações e saldo final do período.
-- **Filtros por data:** consultas de movimentações e relatórios aceitam filtros `de/até`.
+- **Filtros por data:** consultas de movimentações e relatórios aceitam filtros `de/até` (formato `dd/MM/yyyy`), e o intervalo é inclusivo.
 - **Mocks e contas contábeis:** produtos e contas iniciais estão em `backend/data/*.json`. Movimentações mockadas ficam em `backend/data/movementsMock.json` e são usadas apenas enquanto não houver movimentações reais (ou até desativar via `USE_MOCK_MOVEMENTS=false`).
 
 ## Estrutura de dados

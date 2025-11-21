@@ -1,38 +1,92 @@
 [
   {
     "id": "caixa",
-    "currentBalance": 1000,
+    "name": "Caixa",
     "initialBalance": 2000,
-    "name": "Caixa"
+    "currentBalance": 2000
   },
   {
     "id": "bancos",
-    "currentBalance": 6000,
-    "initialBalance": 5000,
-    "name": "Bancos"
+    "name": "Bancos",
+    "initialBalance": 8000,
+    "currentBalance": 8000
   },
   {
     "id": "clientes",
-    "currentBalance": 0,
+    "name": "Clientes",
     "initialBalance": 0,
-    "name": "Clientes"
+    "currentBalance": 0
   },
   {
     "id": "mercadorias",
-    "currentBalance": 10000,
-    "initialBalance": 10000,
-    "name": "Mercadorias"
+    "name": "Mercadorias",
+    "initialBalance": 12000,
+    "currentBalance": 12000
   },
   {
     "id": "moveis-utensilios",
-    "currentBalance": 3500,
-    "initialBalance": 3500,
-    "name": "Móveis e Utensílios"
+    "name": "Móveis e Utensílios",
+    "initialBalance": 4000,
+    "currentBalance": 4000
   },
   {
     "id": "equipamentos-informatica",
-    "currentBalance": 8000,
-    "initialBalance": 8000,
-    "name": "Equipamentos de Informática"
+    "name": "Equipamentos de Informática",
+    "initialBalance": 10000,
+    "currentBalance": 10000
+  },
+  {
+    "id": "fornecedores",
+    "name": "Fornecedores",
+    "initialBalance": -2500,
+    "currentBalance": -2500
+  },
+  {
+    "id": "impostos",
+    "name": "Impostos a Recolher",
+    "initialBalance": -1800,
+    "currentBalance": -1800
+  },
+  {
+    "id": "folha-pagamento",
+    "name": "Folha de Pagamento",
+    "initialBalance": -3500,
+    "currentBalance": -3500
+  },
+  {
+    "id": "marketing",
+    "name": "Marketing",
+    "initialBalance": 1500,
+    "currentBalance": 1500
+  },
+  {
+    "id": "manutencao",
+    "name": "Manutenção",
+    "initialBalance": 2000,
+    "currentBalance": 2000
+  },
+  {
+    "id": "servicos-gerais",
+    "name": "Serviços Gerais",
+    "initialBalance": 1000,
+    "currentBalance": 1000
+  },
+  {
+    "id": "investimentos",
+    "name": "Investimentos",
+    "initialBalance": 6000,
+    "currentBalance": 6000
+  },
+  {
+    "id": "adiantamentos-clientes",
+    "name": "Adiantamentos de Clientes",
+    "initialBalance": 800,
+    "currentBalance": 800
+  },
+  {
+    "id": "provisao-decimo",
+    "name": "Provisão 13º",
+    "initialBalance": -1200,
+    "currentBalance": -1200
   }
 ]

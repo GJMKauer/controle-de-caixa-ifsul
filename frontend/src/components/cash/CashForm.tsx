@@ -14,7 +14,7 @@ import {
   Account,
   Product,
 } from "../../types/cash";
-import { getTodayInputDate } from "../../utils/formatters";
+import { getTodayInputDate, normalizeDate } from "../../utils/formatters";
 
 export interface CashFormProps {
   accounts: Account[];
@@ -118,9 +118,11 @@ export default function CashForm(props: CashFormProps) {
       />
       <TextField
         InputLabelProps={{ shrink: true }}
+        inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
         label="Data"
-        onChange={(event) => setDate(event.target.value)}
-        type="date"
+        onChange={(event) => setDate(normalizeDate(event.target.value))}
+        placeholder="DD/MM/AAAA"
+        type="text"
         value={date}
       />
       <TextField

@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Movement, MovementType } from "../../types/cash";
-import { formatCurrency, formatDate } from "../../utils/formatters";
+import { capitalize, formatCurrency, formatDate } from "../../utils/formatters";
 
 export interface CashTableProps {
   emptyMessage?: string;
@@ -56,7 +56,7 @@ export default function CashTable(props: CashTableProps) {
             <TableRow key={movement.id}>
               <TableCell>{formatDate(movement.date)}</TableCell>
               <TableCell>{movement.description}</TableCell>
-              <TableCell>{movement.account}</TableCell>
+              <TableCell>{capitalize(movement.account)}</TableCell>
               <TableCell align="right" sx={{ fontWeight: 600 }}>
                 {formatCurrency(movement.amount)}
               </TableCell>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
 import { getAccounts, getDailySummary } from "../api/cashApi";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
 import { Account, Summary } from "../types/cash";
@@ -43,25 +43,27 @@ export default function DashboardPage() {
           Data: {getTodayInputDate()}
         </Typography>
       </Stack>
-      <Grid container spacing={2}>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard subtitle="Entradas" value={summary.totalIncome} />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard
-            color="rgba(230, 126, 34, 1)"
-            subtitle="Saídas"
-            value={summary.totalOutcome}
-          />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard
-            color="rgba(0, 184, 148, 1)"
-            subtitle="Saldo"
-            value={summary.balance}
-          />
-        </Grid>
-      </Grid>
+      <Alert severity="info" variant="outlined">
+        Os dados iniciais exibidos são mockados; assim que você registrar uma nova movimentação,
+        apenas os dados reais passam a ser considerados.
+      </Alert>
+      <Box
+        display="grid"
+        gap={2}
+        gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}
+      >
+        <CashSummaryCard subtitle="Entradas" value={summary.totalIncome} />
+        <CashSummaryCard
+          color="rgba(230, 126, 34, 1)"
+          subtitle="Saídas"
+          value={summary.totalOutcome}
+        />
+        <CashSummaryCard
+          color="rgba(0, 184, 148, 1)"
+          subtitle="Saldo"
+          value={summary.balance}
+        />
+      </Box>
       <Paper sx={{ padding: 3 }}>
         <Stack spacing={1}>
           <Typography variant="h6">Saldos por conta</Typography>

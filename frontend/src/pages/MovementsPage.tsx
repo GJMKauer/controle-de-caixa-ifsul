@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
 import {
   createMovement,
   getAccounts,
@@ -60,6 +60,7 @@ export default function MovementsPage() {
   };
 
   useEffect(() => {
+    // "void" deixa explícito que não utilizamos o retorno da Promise e evita warnings de eslint.
     void loadSupportingData();
     void loadMovements(filters);
   }, []);
@@ -83,20 +84,24 @@ export default function MovementsPage() {
           onApply={handleApplyFilters}
         />
       </Stack>
-      <Grid container spacing={3}>
-        <Grid item md={7} xs={12}>
-          <CashTable movements={movements} />
-        </Grid>
-        <Grid item md={5} xs={12}>
-          <Paper sx={{ padding: 3 }}>
-            <CashForm
-              accounts={accounts}
-              onSubmit={handleCreate}
-              products={products}
-            />
-          </Paper>
-        </Grid>
-      </Grid>
+      <Alert severity="info" variant="outlined">
+        Dados iniciais são mockados. Após registrar uma movimentação real,
+        somente os dados verdadeiros serão exibidos.
+      </Alert>
+      <Box
+        display="grid"
+        gap={3}
+        gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}
+      >
+        <CashTable movements={movements} />
+        <Paper sx={{ padding: 3 }}>
+          <CashForm
+            accounts={accounts}
+            onSubmit={handleCreate}
+            products={products}
+          />
+        </Paper>
+      </Box>
     </Stack>
   );
 }

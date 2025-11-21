@@ -1,38 +1,92 @@
 [
   {
-    "id": "produto-1",
-    "account": "moveis-utensilios",
+    "id": "prod-001",
     "name": "Cadeira Ergonômica",
-    "unitPrice": 850
+    "unitPrice": 850,
+    "account": "moveis-utensilios"
   },
   {
-    "id": "produto-2",
-    "account": "equipamentos-informatica",
+    "id": "prod-002",
     "name": "Notebook 15",
-    "unitPrice": 4200
+    "unitPrice": 4200,
+    "account": "equipamentos-informatica"
   },
   {
-    "id": "produto-3",
-    "account": "equipamentos-informatica",
+    "id": "prod-003",
     "name": "Mouse Sem Fio",
-    "unitPrice": 120
+    "unitPrice": 120,
+    "account": "equipamentos-informatica"
   },
   {
-    "id": "produto-4",
-    "account": "moveis-utensilios",
+    "id": "prod-004",
     "name": "Mesa de Escritório",
-    "unitPrice": 640
+    "unitPrice": 640,
+    "account": "moveis-utensilios"
   },
   {
-    "id": "produto-5",
-    "account": "equipamentos-informatica",
+    "id": "prod-005",
     "name": "Monitor 24",
-    "unitPrice": 980
+    "unitPrice": 980,
+    "account": "equipamentos-informatica"
   },
   {
-    "id": "produto-6",
-    "account": "mercadorias",
+    "id": "prod-006",
     "name": "Lote de Mercadorias",
-    "unitPrice": 2500
+    "unitPrice": 2500,
+    "account": "mercadorias"
+  },
+  {
+    "id": "prod-007",
+    "name": "Impressora Laser",
+    "unitPrice": 1550,
+    "account": "equipamentos-informatica"
+  },
+  {
+    "id": "prod-008",
+    "name": "Campanha Anúncios Digitais",
+    "unitPrice": 1800,
+    "account": "marketing"
+  },
+  {
+    "id": "prod-009",
+    "name": "Contrato de Manutenção Predial",
+    "unitPrice": 950,
+    "account": "manutencao"
+  },
+  {
+    "id": "prod-010",
+    "name": "Serviço de Limpeza",
+    "unitPrice": 450,
+    "account": "servicos-gerais"
+  },
+  {
+    "id": "prod-011",
+    "name": "Treinamento Equipe",
+    "unitPrice": 1300,
+    "account": "investimentos"
+  },
+  {
+    "id": "prod-012",
+    "name": "Consultoria Financeira",
+    "unitPrice": 2100,
+    "account": "investimentos"
+  },
+  {
+    "id": "prod-013",
+    "name": "Pacote de Redes Sociais",
+    "unitPrice": 600,
+    "account": "marketing"
+  },
+  {
+    "id": "prod-014",
+    "name": "Seguro Equipamentos",
+    "unitPrice": 780,
+    "account": "manutencao"
+  },
+  {
+    "id": "prod-015",
+    "name": "Assinatura SaaS",
+    "unitPrice": 320,
+    "account": "servicos-gerais"
   }
 ]

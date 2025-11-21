@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Stack, Typography } from "@mui/material";
 import { getPeriodSummary, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
@@ -62,28 +62,30 @@ export default function ReportsPage() {
           onApply={handleFilters}
         />
       </Stack>
-      <Grid container spacing={2}>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard
-            subtitle="Entradas no período"
-            value={summary.totalIncome}
-          />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard
-            color="rgba(230, 126, 34, 1)"
-            subtitle="Saídas no período"
-            value={summary.totalOutcome}
-          />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <CashSummaryCard
-            color="rgba(0, 184, 148, 1)"
-            subtitle="Saldo final"
-            value={summary.balance}
-          />
-        </Grid>
-      </Grid>
+      <Alert severity="info" variant="outlined">
+        Os dados iniciais são mockados; depois que uma movimentação real for
+        registrada, somente dados reais serão exibidos.
+      </Alert>
+      <Box
+        display="grid"
+        gap={2}
+        gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}
+      >
+        <CashSummaryCard
+          subtitle="Entradas no período"
+          value={summary.totalIncome}
+        />
+        <CashSummaryCard
+          color="rgba(230, 126, 34, 1)"
+          subtitle="Saídas no período"
+          value={summary.totalOutcome}
+        />
+        <CashSummaryCard
+          color="rgba(0, 184, 148, 1)"
+          subtitle="Saldo final"
+          value={summary.balance}
+        />
+      </Box>
       <CashTable
         emptyMessage="Nenhuma movimentação no período"
         movements={summary.movements}

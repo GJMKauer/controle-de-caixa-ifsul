@@ -20,6 +20,23 @@ export default function CashFilters(props: CashFiltersProps) {
   const [from, setFrom] = useState(defaultFrom);
   const [to, setTo] = useState(defaultTo);
 
+  /** Normaliza datas com hífen para o formato dd/MM/yyyy.
+   * @param value - Valor digitado.
+   * @returns Data normalizada.
+   */
+  const normalizeDate = (value: string): string => {
+    const trimmed = value.trim();
+    const dashMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (dashMatch) {
+      const [, year, month, day] = dashMatch;
+
+      return `${day}/${month}/${year}`;
+    }
+
+    return trimmed;
+  };
+
   /** Notifica o consumidor com os valores vigentes. */
   const handleSubmit = (): void => {
     onApply({
@@ -31,12 +48,13 @@ export default function CashFilters(props: CashFiltersProps) {
   /** Atualiza a data inicial selecionada.
    * @param value - Data informada.
    */
-  const handleFromChange = (value: string): void => setFrom(value);
+  const handleFromChange = (value: string): void =>
+    setFrom(normalizeDate(value));
 
   /** Atualiza a data final selecionada.
    * @param value - Data informada.
    */
-  const handleToChange = (value: string): void => setTo(value);
+  const handleToChange = (value: string): void => setTo(normalizeDate(value));
 
   return (
     <Stack
@@ -47,15 +65,19 @@ export default function CashFilters(props: CashFiltersProps) {
       <TextField
         InputLabelProps={{ shrink: true }}
         label="De"
+        inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
         onChange={(event) => handleFromChange(event.target.value)}
-        type="date"
+        placeholder="DD/MM/AAAA"
+        type="text"
         value={from}
       />
       <TextField
         InputLabelProps={{ shrink: true }}
         label="Até"
+        inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
         onChange={(event) => handleToChange(event.target.value)}
-        type="date"
+        placeholder="DD/MM/AAAA"
+        type="text"
         value={to}
       />
       <Button onClick={handleSubmit} variant="contained">
