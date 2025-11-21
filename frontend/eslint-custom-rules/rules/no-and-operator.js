@@ -1,8 +1,11 @@
-module.exports = {
+const createRule = () => ({
   create(context) {
     return {
       LogicalExpression(node) {
-        if (node.operator === "&&" && node.parent.type === "JSXExpressionContainer") {
+        const isJsx =
+          node.parent && node.parent.type === "JSXExpressionContainer";
+
+        if (node.operator === "&&" && isJsx) {
           context.report({
             message: "Use a ternary operator instead of '&&' in JSX",
             node,
@@ -12,7 +15,11 @@ module.exports = {
     };
   },
   meta: {
-    docs: { description: "Enforce ternary operator usage instead of '&&' in JSX" },
+    docs: {
+      description: "Enforce ternary operator usage instead of '&&' in JSX",
+    },
     type: "suggestion",
   },
-};
+});
+
+export default createRule();

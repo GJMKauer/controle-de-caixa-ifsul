@@ -1,28 +1,26 @@
-module.exports = {
+const createRule = () => ({
   create(context) {
     const filename = context.getFilename();
 
-    // Ignora as tipagens na pasta "types/ObjectOf.ts" pois é a pasta original da tipagem.
     if (filename.includes("/types/ObjectOf.ts")) {
       return {};
     }
 
-    const isIndexSignature = (member) => {
-      return member.type === "TSIndexSignature" && member.typeAnnotation;
-    };
+    const isIndexSignature = (member) =>
+      member.type === "TSIndexSignature" && member.typeAnnotation;
 
     const checkTypeLiteral = (node) => {
       if (node.members.length === 1 && isIndexSignature(node.members[0])) {
         const valueType = node.members[0].typeAnnotation.typeAnnotation;
+        const sourceCode = context.getSourceCode();
+        const valueTypeText = sourceCode.getText(valueType);
+
         context.report({
           fix(fixer) {
-            const sourceCode = context.getSourceCode();
-            const valueTypeText = sourceCode.getText(valueType);
-            const fixes = [fixer.replaceText(node, `ObjectOf<${valueTypeText}>`)];
-
-            return fixes;
+            return fixer.replaceText(node, `ObjectOf<${valueTypeText}>`);
           },
-          message: "Use ObjectOf<T> type alias instead of { [key: Type]: ValueType }",
+          message:
+            "Use ObjectOf<T> type alias instead of { [key: Type]: ValueType }",
           node,
         });
       }
@@ -30,12 +28,12 @@ module.exports = {
 
     return {
       TSPropertySignature(node) {
-        if (node.typeAnnotation && node.typeAnnotation.typeAnnotation.type === "TSTypeLiteral") {
+        if (node.typeAnnotation?.typeAnnotation?.type === "TSTypeLiteral") {
           checkTypeLiteral(node.typeAnnotation.typeAnnotation);
         }
       },
       TSTypeAliasDeclaration(node) {
-        if (node.typeAnnotation && node.typeAnnotation.type === "TSTypeLiteral") {
+        if (node.typeAnnotation?.type === "TSTypeLiteral") {
           checkTypeLiteral(node.typeAnnotation);
         }
       },
@@ -45,9 +43,14 @@ module.exports = {
     };
   },
   meta: {
-    docs: { description: "enforce using ObjectOf<T> type alias instead of direct object type" },
+    docs: {
+      description:
+        "enforce using ObjectOf<T> type alias instead of direct object type",
+    },
     fixable: "code",
     schema: [],
     type: "suggestion",
   },
-};
+});
+
+export default createRule();

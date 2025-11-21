@@ -1,22 +1,31 @@
-module.exports = {
+const createRule = () => ({
   create(context) {
     const checkUnionTypes = (node) => {
       if (node.type === "TSUnionType") {
+        const source = context.getSourceCode();
         const types = node.types;
-        const sortedTypes = types.slice().sort((a, b) => {
-          const aText = context.getSourceCode().getText(a);
-          const bText = context.getSourceCode().getText(b);
+        const sortedTypes = types.slice().sort((first, second) => {
+          const aText = source.getText(first);
+          const bText = source.getText(second);
+
           return aText < bText ? -1 : 1;
         });
 
-        if (
-          JSON.stringify(types.map((t) => context.getSourceCode().getText(t))) !==
-          JSON.stringify(sortedTypes.map((t) => context.getSourceCode().getText(t)))
-        ) {
+        const currentText = JSON.stringify(
+          types.map((type) => source.getText(type))
+        );
+        const sortedText = JSON.stringify(
+          sortedTypes.map((type) => source.getText(type))
+        );
+
+        if (currentText !== sortedText) {
           context.report({
             fix(fixer) {
-              const sortedText = sortedTypes.map((type) => context.getSourceCode().getText(type)).join(" | ");
-              return fixer.replaceText(node, sortedText);
+              const joined = sortedTypes
+                .map((type) => source.getText(type))
+                .join(" | ");
+
+              return fixer.replaceText(node, joined);
             },
             message: "Type union members should be in alphabetical order",
             node,
@@ -27,7 +36,7 @@ module.exports = {
 
     return {
       TSPropertySignature(node) {
-        if (node.typeAnnotation && node.typeAnnotation.typeAnnotation) {
+        if (node.typeAnnotation?.typeAnnotation) {
           checkUnionTypes(node.typeAnnotation.typeAnnotation);
         }
       },
@@ -44,4 +53,6 @@ module.exports = {
     schema: [],
     type: "suggestion",
   },
-};
+});
+
+export default createRule();

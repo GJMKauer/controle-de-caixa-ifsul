@@ -1,9 +1,15 @@
-module.exports = {
+import alphabeticalTypes from "./rules/alphabetical-types.js";
+import arrayTyping from "./rules/array-typing.js";
+import noAndOperator from "./rules/no-and-operator.js";
+import noHexColors from "./rules/no-hex-colors.js";
+import objectOfTyping from "./rules/object-of-typing.js";
+
+export default {
   rules: {
-    "alphabetical-types": require("./rules/alphabetical-types"),
-    "array-typing": require("./rules/array-typing"),
-    "no-and-operator": require("./rules/no-and-operator"),
-    "no-hex-colors": require("./rules/no-hex-colors"),
-    "object-of-typing": require("./rules/object-of-typing"),
-  },
+    "alphabetical-types": alphabeticalTypes,
+    "array-typing": arrayTyping,
+    "no-and-operator": noAndOperator,
+    "no-hex-colors": noHexColors,
+    "object-of-typing": objectOfTyping
+  }
 };

@@ -1,10 +1,11 @@
 {
-  "author": "",
+  "author": "Gabriel Kauer",
   "description": "Custom ESLint rules for the project",
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
   "name": "eslint-custom-rules",
+  "type": "module",
   "scripts": {},
   "version": "1.0.0"
 }
