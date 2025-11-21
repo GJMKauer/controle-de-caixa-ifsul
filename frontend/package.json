@@ -1,0 +1,48 @@
+{
+  "name": "controle-de-caixa-frontend",
+  "version": "1.0.0",
+  "description": "Frontend React/Vite para controle de caixa diário com Material UI.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.17.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.7",
+    "@mui/material": "^6.1.7",
+    "axios": "^1.7.7",
+    "eslint-custom-rules": "file:eslint-custom-rules",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.0",
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.11.0",
+    "@typescript-eslint/parser": "^8.11.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "eslint": "^9.11.1",
+    "eslint-plugin-custom-rules": "file:./eslint-custom-rules",
+    "eslint-plugin-cypress": "^3.5.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-perfectionist": "^3.9.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "eslint-plugin-sort-destructure-keys": "^2.0.0",
+    "eslint-plugin-sort-keys-plus": "^1.3.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}

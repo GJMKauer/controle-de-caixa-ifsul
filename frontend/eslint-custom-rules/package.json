@@ -1,0 +1,10 @@
+{
+  "author": "",
+  "description": "Custom ESLint rules for the project",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "eslint-custom-rules",
+  "scripts": {},
+  "version": "1.0.0"
+}
