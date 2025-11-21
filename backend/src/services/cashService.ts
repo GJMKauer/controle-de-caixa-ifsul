@@ -30,47 +30,97 @@ interface SummaryWithMovements extends Summary {
   movements: Movement[];
 }
 
-const DAY_IN_MS = 86_400_000;
+/** Normaliza uma string de data em partes (dia, mês, ano).
+ * @param value - Data em string no formato dd/MM/yyyy ou yyyy-MM-dd.
+ * @returns Objeto com partes numéricas da data.
+ */
+const parseDateParts = (
+  value: string
+): { day: number; month: number; year: number } => {
+  const normalized = value.trim();
+  const slashMatch = normalized.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+  if (slashMatch) {
+    const [, day, month, year] = slashMatch;
+
+    return { day: Number(day), month: Number(month), year: Number(year) };
+  }
+
+  const dashMatch = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+  if (dashMatch) {
+    const [, year, month, day] = dashMatch;
+
+    return { day: Number(day), month: Number(month), year: Number(year) };
+  }
+
+  const fallbackDate = new Date(normalized);
+
+  if (Number.isNaN(fallbackDate.getTime())) {
+    throw new Error("Data inválida");
+  }
+
+  return {
+    day: fallbackDate.getUTCDate(),
+    month: fallbackDate.getUTCMonth() + 1,
+    year: fallbackDate.getUTCFullYear(),
+  };
+};
+
+/** Converte partes de data em timestamp UTC.
+ * @param parts - Partes de dia, mês e ano.
+ * @param endOfDay - Indica se deve considerar o fim do dia.
+ * @returns Timestamp calculado.
+ */
+const toUtcTimestamp = (
+  parts: { day: number; month: number; year: number },
+  endOfDay = false
+): number =>
+  Date.UTC(
+    parts.year,
+    parts.month - 1,
+    parts.day,
+    endOfDay ? 23 : 0,
+    endOfDay ? 59 : 0,
+    endOfDay ? 59 : 0,
+    endOfDay ? 999 : 0
+  );
 
 /** Converte um valor de data para timestamp.
- * @param value - Data em string (ex.: YYYY-MM-DD ou ISO) ou timestamp.
+ * @param value - Data em string ou timestamp.
+ * @param mode - Se é início ou final do dia.
  * @returns Timestamp correspondente à data.
  */
-const parseDateToTimestamp = (value: string | number): number => {
+const parseDateToTimestamp = (
+  value: string | number,
+  mode: "start" | "end" = "start"
+): number => {
   if (typeof value === "number") {
     return value;
   }
 
-  const parsed = new Date(value).getTime();
+  const parts = parseDateParts(value);
 
-  if (Number.isNaN(parsed)) {
-    throw new Error("Data inválida");
-  }
-
-  return parsed;
+  return toUtcTimestamp(parts, mode === "end");
 };
 
-/** Calcula o timestamp inicial de um dia (00:00:00.000).
+/** Calcula o timestamp inicial de um dia (00:00:00.000 UTC).
  * @param value - Representação de data.
  * @returns Timestamp do início do dia.
  */
-const getDayStart = (value: string): number => {
-  const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
+const getDayStart = (value: string): number =>
+  parseDateToTimestamp(value, "start");
 
-  return date.getTime();
-};
-
-/** Calcula o timestamp final de um dia (23:59:59.999).
+/** Calcula o timestamp final de um dia (23:59:59.999 UTC).
  * @param value - Representação de data.
  * @returns Timestamp do fim do dia.
  */
-const getDayEnd = (value: string): number => getDayStart(value) + DAY_IN_MS - 1;
+const getDayEnd = (value: string): number => parseDateToTimestamp(value, "end");
 
-/** Filtra movimentações por intervalo de datas (inclusivo).
+/** Filtra movimentações por intervalo de datas, inclusive.
  * @param movements - Movimentações base.
- * @param from - Data inicial (YYYY-MM-DD) opcional.
- * @param to - Data final (YYYY-MM-DD) opcional.
+ * @param from - Data inicial (dd/MM/yyyy) opcional.
+ * @param to - Data final (dd/MM/yyyy) opcional.
  * @returns Movimentações filtradas.
  */
 const filterByDateRange = (
@@ -100,14 +150,14 @@ const filterByDateRange = (
  */
 const buildSummary = (movements: Movement[]): Summary => {
   const totals = movements.reduce(
-    (acc, movement) => {
+    (accumulator, movement) => {
       if (movement.type === "INCOME") {
-        acc.totalIncome += movement.amount;
+        accumulator.totalIncome += movement.amount;
       } else {
-        acc.totalOutcome += movement.amount;
+        accumulator.totalOutcome += movement.amount;
       }
 
-      return acc;
+      return accumulator;
     },
     { balance: 0, totalIncome: 0, totalOutcome: 0 } as Summary
   );
@@ -119,8 +169,8 @@ const buildSummary = (movements: Movement[]): Summary => {
 };
 
 /** Recupera as movimentações com filtros opcionais de período.
- * @param from - Data inicial no formato YYYY-MM-DD.
- * @param to - Data final no formato YYYY-MM-DD.
+ * @param from - Data inicial no formato dd/MM/yyyy.
+ * @param to - Data final no formato dd/MM/yyyy.
  * @returns Lista filtrada de movimentações.
  */
 const listMovements = async (
@@ -202,7 +252,7 @@ const createMovement = async (payload: MovementInput): Promise<Movement> => {
 };
 
 /** Gera resumo diário para uma data específica.
- * @param date - Data alvo em YYYY-MM-DD.
+ * @param date - Data alvo em dd/MM/yyyy.
  * @returns Resumo consolidado do dia.
  */
 const getDailySummary = async (date: string): Promise<SummaryWithMovements> => {

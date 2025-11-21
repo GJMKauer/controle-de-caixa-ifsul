@@ -1,27 +1,27 @@
-const { defineConfig, globalIgnores } = require("eslint/config");
-const { fixupConfigRules, fixupPluginRules } = require("@eslint/compat");
+import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
+import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import { defineConfig, globalIgnores } from "eslint/config";
+import customRules from "eslint-plugin-custom-rules";
+import eslintPluginImport from "eslint-plugin-import";
+import perfectionist from "eslint-plugin-perfectionist";
+import react from "eslint-plugin-react";
+import reactRefresh from "eslint-plugin-react-refresh";
+import sortDestructureKeys from "eslint-plugin-sort-destructure-keys";
+import sortKeysPlus from "eslint-plugin-sort-keys-plus";
+import globals from "globals";
+import tsParser from "@typescript-eslint/parser";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import { fileURLToPath } from "node:url";
 
-const globals = require("globals");
-const customRules = require("eslint-plugin-custom-rules");
-const eslintPluginImport = require("eslint-plugin-import");
-const js = require("@eslint/js");
-const perfectionist = require("eslint-plugin-perfectionist");
-const react = require("eslint-plugin-react");
-const reactRefresh = require("eslint-plugin-react-refresh");
-const sortDestructureKeys = require("eslint-plugin-sort-destructure-keys");
-const sortKeysPlus = require("eslint-plugin-sort-keys-plus");
-const tsParser = require("@typescript-eslint/parser");
-const typescriptEslint = require("@typescript-eslint/eslint-plugin");
-
-const { FlatCompat } = require("@eslint/eslintrc");
-
+const baseDirectory = fileURLToPath(new URL(".", import.meta.url));
 const compat = new FlatCompat({
   allConfig: js.configs.all,
-  baseDirectory: __dirname,
+  baseDirectory,
   recommendedConfig: js.configs.recommended,
 });
 
-module.exports = defineConfig([
+export default defineConfig([
   {
     extends: fixupConfigRules(
       compat.extends(
@@ -34,10 +34,13 @@ module.exports = defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
-        module: "readonly",
-        require: "readonly",
+        ...globals.node,
       },
       parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
     },
     plugins: {
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
@@ -49,7 +52,6 @@ module.exports = defineConfig([
       "sort-destructure-keys": sortDestructureKeys,
       "sort-keys-plus": sortKeysPlus,
     },
-
     rules: {
       "@typescript-eslint/member-ordering": [
         "error",
@@ -77,24 +79,14 @@ module.exports = defineConfig([
         {
           code: 120,
           comments: 200,
-          ignorePattern: `d\\s*=\\s*["'][^"]*["]|xlinkHref\\s*=\\s*["'][^"]*["']`,
+          ignorePattern: `d\\s*=\\s*["'][^"]*["']|xlinkHref\\s*=\\s*["'][^"]*["']`,
           ignoreUrls: true,
           tabWidth: 2,
         },
       ],
-      "max-lines": [
-        "error",
-        {
-          max: 350,
-        },
-      ],
+      "max-lines": ["error", { max: 350 }],
       "no-nested-ternary": "error",
-      "no-unneeded-ternary": [
-        "error",
-        {
-          defaultAssignment: false,
-        },
-      ],
+      "no-unneeded-ternary": ["error", { defaultAssignment: false }],
       "perfectionist/sort-enums": "error",
       "perfectionist/sort-interfaces": "error",
       "perfectionist/sort-named-exports": "error",
@@ -116,11 +108,7 @@ module.exports = defineConfig([
       "sort-keys-plus/sort-keys": [
         "error",
         "asc",
-        {
-          caseSensitive: true,
-          minKeys: 2,
-          natural: false,
-        },
+        { caseSensitive: true, minKeys: 2, natural: false },
       ],
     },
   },
