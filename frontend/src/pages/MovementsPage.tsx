@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
-import {
-  createMovement,
-  getAccounts,
-  getProducts,
-  listMovements,
-  MovementFilters,
-} from "../api/cashApi";
+import { createMovement, getAccounts, getProducts, listMovements, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashForm from "../components/cash/CashForm";
 import CashTable from "../components/cash/CashTable";
@@ -24,19 +18,14 @@ export default function MovementsPage() {
   /** Busca movimentações conforme filtros ativos.
    * @param currentFilters - Filtros opcionais.
    */
-  const loadMovements = async (
-    currentFilters?: MovementFilters
-  ): Promise<void> => {
+  const loadMovements = async (currentFilters?: MovementFilters): Promise<void> => {
     const data = await listMovements(currentFilters);
     setMovements(data);
   };
 
   /** Carrega contas e produtos necessários para o formulário. */
   const loadSupportingData = async (): Promise<void> => {
-    const [accountsData, productsData] = await Promise.all([
-      getAccounts(),
-      getProducts(),
-    ]);
+    const [accountsData, productsData] = await Promise.all([getAccounts(), getProducts()]);
     setAccounts(accountsData);
     setProducts(productsData);
   };
@@ -52,9 +41,7 @@ export default function MovementsPage() {
   /** Aplica filtros informados pelo usuário.
    * @param newFilters - Filtros recebidos do componente filho.
    */
-  const handleApplyFilters = async (
-    newFilters: MovementFilters
-  ): Promise<void> => {
+  const handleApplyFilters = async (newFilters: MovementFilters): Promise<void> => {
     setFilters(newFilters);
     await loadMovements(newFilters);
   };
@@ -67,39 +54,22 @@ export default function MovementsPage() {
 
   return (
     <Stack spacing={3}>
-      <Stack
-        direction={{ md: "row", xs: "column" }}
-        justifyContent="space-between"
-        spacing={2}
-      >
+      <Stack direction={{ md: "row", xs: "column" }} justifyContent="space-between" spacing={2}>
         <Stack spacing={0.5}>
           <Typography variant="h5">Movimentações</Typography>
           <Typography color="text.secondary" variant="body2">
             Registre entradas, saídas e acompanhe o caixa diário.
           </Typography>
         </Stack>
-        <CashFilters
-          defaultFrom={filters.from}
-          defaultTo={filters.to}
-          onApply={handleApplyFilters}
-        />
+        <CashFilters defaultFrom={filters.from} defaultTo={filters.to} onApply={handleApplyFilters} />
       </Stack>
       <Alert severity="info" variant="outlined">
-        Dados iniciais são mockados. Após registrar uma movimentação real,
-        somente os dados verdadeiros serão exibidos.
+        Dados iniciais são mockados. Após registrar uma movimentação real, somente os dados verdadeiros serão exibidos.
       </Alert>
-      <Box
-        display="grid"
-        gap={3}
-        gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}
-      >
+      <Box display="grid" gap={3} gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}>
         <CashTable movements={movements} />
         <Paper sx={{ padding: 3 }}>
-          <CashForm
-            accounts={accounts}
-            onSubmit={handleCreate}
-            products={products}
-          />
+          <CashForm accounts={accounts} onSubmit={handleCreate} products={products} />
         </Paper>
       </Box>
     </Stack>

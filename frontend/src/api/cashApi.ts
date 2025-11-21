@@ -1,11 +1,5 @@
 import { httpClient } from "./httpClient";
-import {
-  Account,
-  Movement,
-  MovementPayload,
-  Product,
-  Summary,
-} from "../types/cash";
+import { Account, Movement, MovementPayload, Product, Summary } from "../types/cash";
 
 export interface MovementFilters {
   from?: string;
@@ -16,9 +10,7 @@ export interface MovementFilters {
  * @param filters - Datas inicial e final.
  * @returns Movimentações retornadas pela API.
  */
-const listMovements = async (
-  filters?: MovementFilters
-): Promise<Array<Movement>> => {
+const listMovements = async (filters?: MovementFilters): Promise<Array<Movement>> => {
   const response = await httpClient.get<Array<Movement>>("/movements", {
     params: filters,
   });
@@ -53,10 +45,7 @@ const getDailySummary = async (date: string): Promise<Summary> => {
  * @param to - Data final.
  * @returns Totais do intervalo.
  */
-const getPeriodSummary = async (
-  from?: string,
-  to?: string
-): Promise<Summary> => {
+const getPeriodSummary = async (from?: string, to?: string): Promise<Summary> => {
   const response = await httpClient.get<Summary>("/summary/period", {
     params: { from, to },
   });
@@ -82,11 +71,4 @@ const getProducts = async (): Promise<Array<Product>> => {
   return response.data;
 };
 
-export {
-  createMovement,
-  getAccounts,
-  getDailySummary,
-  getPeriodSummary,
-  getProducts,
-  listMovements,
-};
+export { createMovement, getAccounts, getDailySummary, getPeriodSummary, getProducts, listMovements };

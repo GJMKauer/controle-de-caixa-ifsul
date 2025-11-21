@@ -1,12 +1,4 @@
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 
 export interface AppLayoutProps {

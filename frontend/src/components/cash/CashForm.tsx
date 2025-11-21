@@ -1,19 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  MenuItem,
-  Stack,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import {
-  MovementPayload,
-  MovementType,
-  Account,
-  Product,
-} from "../../types/cash";
+import { Button, MenuItem, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { MovementPayload, MovementType, Account, Product } from "../../types/cash";
 import { getTodayInputDate, normalizeDate } from "../../utils/formatters";
 
 export interface CashFormProps {
@@ -56,13 +43,7 @@ export default function CashForm(props: CashFormProps) {
   const handleSubmit = async (): Promise<void> => {
     const numericAmount = Number(amount);
 
-    if (
-      !description ||
-      Number.isNaN(numericAmount) ||
-      numericAmount <= 0 ||
-      !date ||
-      !account
-    ) {
+    if (!description || Number.isNaN(numericAmount) || numericAmount <= 0 || !date || !account) {
       return;
     }
 
@@ -95,11 +76,7 @@ export default function CashForm(props: CashFormProps) {
       <Typography fontWeight={600} variant="h6">
         Nova movimentação
       </Typography>
-      <ToggleButtonGroup
-        exclusive
-        onChange={(_event, value) => value && handleTypeChange(value)}
-        value={type}
-      >
+      <ToggleButtonGroup exclusive onChange={(_event, value) => value && handleTypeChange(value)} value={type}>
         <ToggleButton value="INCOME">Entrada</ToggleButton>
         <ToggleButton value="OUTCOME">Saída</ToggleButton>
       </ToggleButtonGroup>
@@ -125,24 +102,14 @@ export default function CashForm(props: CashFormProps) {
         type="text"
         value={date}
       />
-      <TextField
-        label="Conta"
-        onChange={(event) => setAccount(event.target.value)}
-        select
-        value={account}
-      >
+      <TextField label="Conta" onChange={(event) => setAccount(event.target.value)} select value={account}>
         {accounts.map((currentAccount) => (
           <MenuItem key={currentAccount.id} value={currentAccount.id}>
             {currentAccount.name}
           </MenuItem>
         ))}
       </TextField>
-      <TextField
-        label="Produto"
-        onChange={(event) => setProductId(event.target.value)}
-        select
-        value={productId}
-      >
+      <TextField label="Produto" onChange={(event) => setProductId(event.target.value)} select value={productId}>
         <MenuItem value="">Nenhum</MenuItem>
         {filteredProducts.map((product) => (
           <MenuItem key={product.id} value={product.id}>

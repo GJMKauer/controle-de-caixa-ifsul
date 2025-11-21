@@ -11,19 +11,13 @@ const createRule = () => ({
           return aText < bText ? -1 : 1;
         });
 
-        const currentText = JSON.stringify(
-          types.map((type) => source.getText(type))
-        );
-        const sortedText = JSON.stringify(
-          sortedTypes.map((type) => source.getText(type))
-        );
+        const currentText = JSON.stringify(types.map((type) => source.getText(type)));
+        const sortedText = JSON.stringify(sortedTypes.map((type) => source.getText(type)));
 
         if (currentText !== sortedText) {
           context.report({
             fix(fixer) {
-              const joined = sortedTypes
-                .map((type) => source.getText(type))
-                .join(" | ");
+              const joined = sortedTypes.map((type) => source.getText(type)).join(" | ");
 
               return fixer.replaceText(node, joined);
             },

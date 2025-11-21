@@ -31,8 +31,7 @@ const theme = createTheme({
     borderRadius: 8,
   },
   typography: {
-    fontFamily:
-      'Poppins, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: 'Poppins, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
 });
 

@@ -21,8 +21,7 @@ export interface CashTableProps {
  * @param type - Tipo da movimentação.
  * @returns Texto de label.
  */
-const getTypeLabel = (type: MovementType): string =>
-  type === "INCOME" ? "Entrada" : "Saída";
+const getTypeLabel = (type: MovementType): string => (type === "INCOME" ? "Entrada" : "Saída");
 
 /** Tabela para listagem de movimentações.
  * @param props - Propriedades do componente.

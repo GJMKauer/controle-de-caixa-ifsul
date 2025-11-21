@@ -1,7 +1,6 @@
 const createRule = () => ({
   create: (context) => {
-    const compoundPropertyRegex =
-      "(\\b(?:\\w+\\s+){0,2}(?:solid|dotted|dashed|double|groove|ridge|inset|outset)\\s+)?";
+    const compoundPropertyRegex = "(\\b(?:\\w+\\s+){0,2}(?:solid|dotted|dashed|double|groove|ridge|inset|outset)\\s+)?";
     const hexColorRegex = "#\\b([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\\b";
     const combinedRegex = new RegExp(compoundPropertyRegex + hexColorRegex);
 
@@ -18,8 +17,7 @@ const createRule = () => ({
 
         if (!isWithinCyGet && combinedRegex.test(node.value)) {
           context.report({
-            message:
-              "Use RGB or RGBA color values instead of hexadecimal colors.",
+            message: "Use RGB or RGBA color values instead of hexadecimal colors.",
             node,
           });
         }
@@ -28,8 +26,7 @@ const createRule = () => ({
   },
   meta: {
     docs: {
-      description:
-        "Disallow the use of hexadecimal color values and auto-fix to RGB or RGBA color values.",
+      description: "Disallow the use of hexadecimal color values and auto-fix to RGB or RGBA color values.",
     },
     fixable: "code",
     type: "suggestion",

@@ -10,6 +10,6 @@ export default {
     "array-typing": arrayTyping,
     "no-and-operator": noAndOperator,
     "no-hex-colors": noHexColors,
-    "object-of-typing": objectOfTyping
-  }
+    "object-of-typing": objectOfTyping,
+  },
 };

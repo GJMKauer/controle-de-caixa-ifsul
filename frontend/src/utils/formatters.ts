@@ -77,11 +77,4 @@ const capitalize = (value: string): string =>
         .join(" ")
     : value;
 
-export {
-  capitalize,
-  formatCurrency,
-  formatDate,
-  getTodayInputDate,
-  normalizeDate,
-  toInputDate,
-};
+export { capitalize, formatCurrency, formatDate, getTodayInputDate, normalizeDate, toInputDate };

@@ -44,40 +44,22 @@ export default function DashboardPage() {
         </Typography>
       </Stack>
       <Alert severity="info" variant="outlined">
-        Os dados iniciais exibidos são mockados; assim que você registrar uma
-        nova movimentação, apenas os dados reais passam a ser considerados.
+        Os dados iniciais exibidos são mockados; assim que você registrar uma nova movimentação, apenas os dados reais
+        passam a ser considerados.
       </Alert>
-      <Box
-        display="grid"
-        gap={2}
-        gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}
-      >
+      <Box display="grid" gap={2} gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}>
         <CashSummaryCard subtitle="Entradas" value={summary.totalIncome} />
-        <CashSummaryCard
-          color="rgba(230, 126, 34, 1)"
-          subtitle="Saídas"
-          value={summary.totalOutcome}
-        />
-        <CashSummaryCard
-          color="rgba(0, 184, 148, 1)"
-          subtitle="Saldo"
-          value={summary.balance}
-        />
+        <CashSummaryCard color="rgba(230, 126, 34, 1)" subtitle="Saídas" value={summary.totalOutcome} />
+        <CashSummaryCard color="rgba(0, 184, 148, 1)" subtitle="Saldo" value={summary.balance} />
       </Box>
       <Paper sx={{ padding: 3 }}>
         <Stack spacing={1}>
           <Typography variant="h6">Saldos por conta</Typography>
           <Stack spacing={1}>
             {accounts.map((account) => (
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                key={account.id}
-              >
+              <Stack direction="row" justifyContent="space-between" key={account.id}>
                 <Typography>{account.name}</Typography>
-                <Typography fontWeight={600}>
-                  {formatCurrency(account.currentBalance)}
-                </Typography>
+                <Typography fontWeight={600}>{formatCurrency(account.currentBalance)}</Typography>
               </Stack>
             ))}
             {accounts.length === 0 ? (

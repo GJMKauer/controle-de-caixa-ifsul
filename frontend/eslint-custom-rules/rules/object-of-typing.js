@@ -6,8 +6,7 @@ const createRule = () => ({
       return {};
     }
 
-    const isIndexSignature = (member) =>
-      member.type === "TSIndexSignature" && member.typeAnnotation;
+    const isIndexSignature = (member) => member.type === "TSIndexSignature" && member.typeAnnotation;
 
     const checkTypeLiteral = (node) => {
       if (node.members.length === 1 && isIndexSignature(node.members[0])) {
@@ -19,8 +18,7 @@ const createRule = () => ({
           fix(fixer) {
             return fixer.replaceText(node, `ObjectOf<${valueTypeText}>`);
           },
-          message:
-            "Use ObjectOf<T> type alias instead of { [key: Type]: ValueType }",
+          message: "Use ObjectOf<T> type alias instead of { [key: Type]: ValueType }",
           node,
         });
       }
@@ -44,8 +42,7 @@ const createRule = () => ({
   },
   meta: {
     docs: {
-      description:
-        "enforce using ObjectOf<T> type alias instead of direct object type",
+      description: "enforce using ObjectOf<T> type alias instead of direct object type",
     },
     fixable: "code",
     schema: [],

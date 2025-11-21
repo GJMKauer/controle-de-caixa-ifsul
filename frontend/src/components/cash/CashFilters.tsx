@@ -48,8 +48,7 @@ export default function CashFilters(props: CashFiltersProps) {
   /** Atualiza a data inicial selecionada.
    * @param value - Data informada.
    */
-  const handleFromChange = (value: string): void =>
-    setFrom(normalizeDate(value));
+  const handleFromChange = (value: string): void => setFrom(normalizeDate(value));
 
   /** Atualiza a data final selecionada.
    * @param value - Data informada.
@@ -57,11 +56,7 @@ export default function CashFilters(props: CashFiltersProps) {
   const handleToChange = (value: string): void => setTo(normalizeDate(value));
 
   return (
-    <Stack
-      direction={{ md: "row", xs: "column" }}
-      spacing={2}
-      sx={{ alignItems: "flex-end" }}
-    >
+    <Stack direction={{ md: "row", xs: "column" }} spacing={2} sx={{ alignItems: "flex-end" }}>
       <TextField
         InputLabelProps={{ shrink: true }}
         inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}

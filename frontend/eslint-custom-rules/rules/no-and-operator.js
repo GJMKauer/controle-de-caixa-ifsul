@@ -2,8 +2,7 @@ const createRule = () => ({
   create(context) {
     return {
       LogicalExpression(node) {
-        const isJsx =
-          node.parent && node.parent.type === "JSXExpressionContainer";
+        const isJsx = node.parent && node.parent.type === "JSXExpressionContainer";
 
         if (node.operator === "&&" && isJsx) {
           context.report({
