@@ -3,14 +3,14 @@ const createRule = () => ({
     return {
       TSArrayType(node) {
         context.report({
-          message: "Use Array<Type> instead of Type[]",
-          node,
           fix(fixer) {
             const sourceCode = context.getSourceCode();
             const elementType = sourceCode.getText(node.elementType);
 
             return fixer.replaceText(node, `Array<${elementType}>`);
           },
+          message: "Use Array<Type> instead of Type[]",
+          node,
         });
       },
     };
