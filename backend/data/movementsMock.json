@@ -1,0 +1,36 @@
+[
+  {
+    "id": "mock-1",
+    "account": "caixa",
+    "amount": 1200,
+    "date": 1732233600000,
+    "description": "Venda balcão",
+    "productId": "produto-6",
+    "type": "INCOME"
+  },
+  {
+    "id": "mock-2",
+    "account": "mercadorias",
+    "amount": 900,
+    "date": 1732147200000,
+    "description": "Compra de mercadorias",
+    "productId": "produto-6",
+    "type": "OUTCOME"
+  },
+  {
+    "id": "mock-3",
+    "account": "bancos",
+    "amount": 1500,
+    "date": 1732060800000,
+    "description": "Recebimento de cliente",
+    "type": "INCOME"
+  },
+  {
+    "id": "mock-4",
+    "account": "caixa",
+    "amount": 750,
+    "date": 1731974400000,
+    "description": "Pagamento de aluguel",
+    "type": "OUTCOME"
+  }
+]

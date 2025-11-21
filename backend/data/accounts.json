@@ -1,0 +1,38 @@
+[
+  {
+    "id": "caixa",
+    "currentBalance": 1000,
+    "initialBalance": 2000,
+    "name": "Caixa"
+  },
+  {
+    "id": "bancos",
+    "currentBalance": 6000,
+    "initialBalance": 5000,
+    "name": "Bancos"
+  },
+  {
+    "id": "clientes",
+    "currentBalance": 0,
+    "initialBalance": 0,
+    "name": "Clientes"
+  },
+  {
+    "id": "mercadorias",
+    "currentBalance": 10000,
+    "initialBalance": 10000,
+    "name": "Mercadorias"
+  },
+  {
+    "id": "moveis-utensilios",
+    "currentBalance": 3500,
+    "initialBalance": 3500,
+    "name": "Móveis e Utensílios"
+  },
+  {
+    "id": "equipamentos-informatica",
+    "currentBalance": 8000,
+    "initialBalance": 8000,
+    "name": "Equipamentos de Informática"
+  }
+]

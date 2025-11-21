@@ -1,0 +1,38 @@
+[
+  {
+    "id": "produto-1",
+    "account": "moveis-utensilios",
+    "name": "Cadeira Ergonômica",
+    "unitPrice": 850
+  },
+  {
+    "id": "produto-2",
+    "account": "equipamentos-informatica",
+    "name": "Notebook 15",
+    "unitPrice": 4200
+  },
+  {
+    "id": "produto-3",
+    "account": "equipamentos-informatica",
+    "name": "Mouse Sem Fio",
+    "unitPrice": 120
+  },
+  {
+    "id": "produto-4",
+    "account": "moveis-utensilios",
+    "name": "Mesa de Escritório",
+    "unitPrice": 640
+  },
+  {
+    "id": "produto-5",
+    "account": "equipamentos-informatica",
+    "name": "Monitor 24",
+    "unitPrice": 980
+  },
+  {
+    "id": "produto-6",
+    "account": "mercadorias",
+    "name": "Lote de Mercadorias",
+    "unitPrice": 2500
+  }
+]
