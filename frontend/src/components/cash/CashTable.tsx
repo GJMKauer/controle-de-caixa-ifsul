@@ -13,6 +13,7 @@ import { Movement, MovementType } from "../../types/cash";
 import { capitalize, formatCurrency, formatDate } from "../../utils/formatters";
 
 export interface CashTableProps {
+  accountNames?: Record<string, string>;
   emptyMessage?: string;
   movements: Array<Movement>;
 }
@@ -28,7 +29,7 @@ const getTypeLabel = (type: MovementType): string => (type === "INCOME" ? "Entra
  * @returns Tabela renderizada.
  */
 export default function CashTable(props: CashTableProps) {
-  const { emptyMessage = "Nenhuma movimentação encontrada", movements } = props;
+  const { accountNames, emptyMessage = "Nenhuma movimentação encontrada", movements } = props;
 
   if (movements.length === 0) {
     return (
@@ -55,7 +56,7 @@ export default function CashTable(props: CashTableProps) {
             <TableRow key={movement.id}>
               <TableCell>{formatDate(movement.date)}</TableCell>
               <TableCell>{movement.description}</TableCell>
-              <TableCell>{capitalize(movement.account)}</TableCell>
+              <TableCell>{accountNames?.[movement.account] ?? capitalize(movement.account)}</TableCell>
               <TableCell align="right" sx={{ fontWeight: 600 }}>
                 {formatCurrency(movement.amount)}
               </TableCell>

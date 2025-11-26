@@ -38,20 +38,20 @@
   {
     "id": "fornecedores",
     "name": "Fornecedores",
-    "initialBalance": -2500,
-    "currentBalance": -2500
+    "initialBalance": 3000,
+    "currentBalance": 3000
   },
   {
     "id": "impostos",
     "name": "Impostos a Recolher",
-    "initialBalance": -1800,
-    "currentBalance": -1800
+    "initialBalance": 2000,
+    "currentBalance": 2000
   },
   {
     "id": "folha-pagamento",
     "name": "Folha de Pagamento",
-    "initialBalance": -3500,
-    "currentBalance": -3500
+    "initialBalance": 5000,
+    "currentBalance": 5000
   },
   {
     "id": "marketing",
@@ -86,7 +86,7 @@
   {
     "id": "provisao-decimo",
     "name": "Provisão 13º",
-    "initialBalance": -1200,
-    "currentBalance": -1200
+    "initialBalance": 2000,
+    "currentBalance": 2000
   }
 ]

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import { MovementFilters } from "../../api/cashApi";
+import { applyDateMask } from "../../utils/formatters";
 
 export interface CashFiltersProps {
   defaultFrom?: string;
@@ -20,40 +21,23 @@ export default function CashFilters(props: CashFiltersProps) {
   const [from, setFrom] = useState(defaultFrom);
   const [to, setTo] = useState(defaultTo);
 
-  /** Normaliza datas com hífen para o formato dd/MM/yyyy.
-   * @param value - Valor digitado.
-   * @returns Data normalizada.
-   */
-  const normalizeDate = (value: string): string => {
-    const trimmed = value.trim();
-    const dashMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-    if (dashMatch) {
-      const [, year, month, day] = dashMatch;
-
-      return `${day}/${month}/${year}`;
-    }
-
-    return trimmed;
-  };
-
   /** Notifica o consumidor com os valores vigentes. */
   const handleSubmit = (): void => {
     onApply({
       from: from || undefined,
-      to: to || undefined,
+      to: to || undefined
     });
   };
 
   /** Atualiza a data inicial selecionada.
    * @param value - Data informada.
    */
-  const handleFromChange = (value: string): void => setFrom(normalizeDate(value));
+  const handleFromChange = (value: string): void => setFrom(applyDateMask(value));
 
   /** Atualiza a data final selecionada.
    * @param value - Data informada.
    */
-  const handleToChange = (value: string): void => setTo(normalizeDate(value));
+  const handleToChange = (value: string): void => setTo(applyDateMask(value));
 
   return (
     <Stack direction={{ md: "row", xs: "column" }} spacing={2} sx={{ alignItems: "flex-end" }}>

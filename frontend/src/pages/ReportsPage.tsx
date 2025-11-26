@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Box, Stack, Typography } from "@mui/material";
-import { getPeriodSummary, MovementFilters } from "../api/cashApi";
+import { getAccounts, getPeriodSummary, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
 import CashTable from "../components/cash/CashTable";
-import { Summary } from "../types/cash";
+import { Account, Summary } from "../types/cash";
 
 /** Página de relatórios por período.
  * @returns Seções de filtros, resumo e listagem.
  */
 export default function ReportsPage() {
+  const [accounts, setAccounts] = useState<Array<Account>>([]);
   const [filters, setFilters] = useState<MovementFilters>({});
   const [summary, setSummary] = useState<Summary>({
     balance: 0,
@@ -17,6 +18,16 @@ export default function ReportsPage() {
     totalIncome: 0,
     totalOutcome: 0,
   });
+
+  /** Mapeia IDs de conta para seus respectivos nomes. */
+  const accountNames = useMemo(
+    () =>
+      accounts.reduce<Record<string, string>>((acc, account) => {
+        acc[account.id] = account.name;
+        return acc;
+      }, {}),
+    [accounts]
+  );
 
   /** Consulta resumo de acordo com o período informado.
    * @param currentFilters - Intervalo de datas.
@@ -36,6 +47,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     void loadSummary(filters);
+    void getAccounts().then(setAccounts);
   }, []);
 
   return (
@@ -58,7 +70,11 @@ export default function ReportsPage() {
         <CashSummaryCard color="rgba(230, 126, 34, 1)" subtitle="Saídas no período" value={summary.totalOutcome} />
         <CashSummaryCard color="rgba(0, 184, 148, 1)" subtitle="Saldo final" value={summary.balance} />
       </Box>
-      <CashTable emptyMessage="Nenhuma movimentação no período" movements={summary.movements} />
+      <CashTable
+        accountNames={accountNames}
+        emptyMessage="Nenhuma movimentação no período"
+        movements={summary.movements}
+      />
     </Stack>
   );
 }

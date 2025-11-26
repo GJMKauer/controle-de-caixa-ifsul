@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
 import { createMovement, getAccounts, getProducts, listMovements, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
@@ -14,6 +14,16 @@ export default function MovementsPage() {
   const [filters, setFilters] = useState<MovementFilters>({});
   const [movements, setMovements] = useState<Array<Movement>>([]);
   const [products, setProducts] = useState<Array<Product>>([]);
+
+  /** Mapeia IDs de conta para seus respectivos nomes. */
+  const accountNames = useMemo(
+    () =>
+      accounts.reduce<Record<string, string>>((acc, account) => {
+        acc[account.id] = account.name;
+        return acc;
+      }, {}),
+    [accounts]
+  );
 
   /** Busca movimentações conforme filtros ativos.
    * @param currentFilters - Filtros opcionais.
@@ -67,7 +77,7 @@ export default function MovementsPage() {
         Dados iniciais são mockados. Após registrar uma movimentação real, somente os dados verdadeiros serão exibidos.
       </Alert>
       <Box display="grid" gap={3} gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}>
-        <CashTable movements={movements} />
+        <CashTable accountNames={accountNames} movements={movements} />
         <Paper sx={{ padding: 3 }}>
           <CashForm accounts={accounts} onSubmit={handleCreate} products={products} />
         </Paper>

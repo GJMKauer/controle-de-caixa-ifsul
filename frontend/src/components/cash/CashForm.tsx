@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, MenuItem, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { MovementPayload, MovementType, Account, Product } from "../../types/cash";
-import { getTodayInputDate, normalizeDate } from "../../utils/formatters";
+import { applyDateMask, getTodayInputDate } from "../../utils/formatters";
 
 export interface CashFormProps {
   accounts: Array<Account>;
@@ -59,11 +59,17 @@ export default function CashForm(props: CashFormProps) {
     resetForm();
   };
 
-  /** Lista de produtos filtrados pela conta selecionada. */
-  const filteredProducts = useMemo(
-    () => products.filter((product) => product.account === account),
-    [account, products]
-  );
+  /** Lista de produtos ordenada, priorizando os da conta selecionada. */
+  const productOptions = useMemo(() => {
+    const copy = [...products];
+
+    return copy.sort((first, second) => {
+      const firstMatch = first.account === account ? 1 : 0;
+      const secondMatch = second.account === account ? 1 : 0;
+
+      return secondMatch - firstMatch;
+    });
+  }, [account, products]);
 
   useEffect(() => {
     if (!account && accounts.length > 0) {
@@ -97,7 +103,7 @@ export default function CashForm(props: CashFormProps) {
         InputLabelProps={{ shrink: true }}
         inputProps={{ inputMode: "numeric", pattern: "\\d{2}/\\d{2}/\\d{4}" }}
         label="Data"
-        onChange={(event) => setDate(normalizeDate(event.target.value))}
+        onChange={(event) => setDate(applyDateMask(event.target.value))}
         placeholder="DD/MM/AAAA"
         type="text"
         value={date}
@@ -111,7 +117,7 @@ export default function CashForm(props: CashFormProps) {
       </TextField>
       <TextField label="Produto" onChange={(event) => setProductId(event.target.value)} select value={productId}>
         <MenuItem value="">Nenhum</MenuItem>
-        {filteredProducts.map((product) => (
+        {productOptions.map((product) => (
           <MenuItem key={product.id} value={product.id}>
             {product.name}
           </MenuItem>

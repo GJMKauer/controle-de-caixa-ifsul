@@ -77,4 +77,32 @@ const capitalize = (value: string): string =>
         .join(" ")
     : value;
 
-export { capitalize, formatCurrency, formatDate, getTodayInputDate, normalizeDate, toInputDate };
+/** Aplica máscara de data (dd/MM/yyyy) sobre o valor digitado.
+ * @param value - Texto de entrada.
+ * @returns Valor com máscara.
+ */
+const applyDateMask = (value: string): string => {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+
+  if (!digits) {
+    return "";
+  }
+
+  const day = digits.slice(0, 2);
+  const month = digits.slice(2, 4);
+  const year = digits.slice(4, 8);
+
+  const parts = [day, month, year].filter(Boolean);
+
+  return parts
+    .map((part, index) => {
+      if (index === 0 || index === 1) {
+        return part.slice(0, 2);
+      }
+      return part.slice(0, 4);
+    })
+    .join("/")
+    .slice(0, 10);
+};
+
+export { applyDateMask, capitalize, formatCurrency, formatDate, getTodayInputDate, normalizeDate, toInputDate };
