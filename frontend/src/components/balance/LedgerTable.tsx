@@ -112,17 +112,19 @@ export default function LedgerTable(props: LedgerTableProps): JSX.Element {
                 </Typography>
               </Box>
               {Array.from({ length: rowCount }, (_item, index) => {
-                const debitEntry = debitRows[index];
-                const creditEntry = creditRows[index];
-                const debitLabel = debitEntry ? `${debitEntry.id} ${debitEntry.description}` : "";
-                const creditLabel = creditEntry ? `${creditEntry.id} ${creditEntry.description}` : "";
-                const isDebitSf = debitEntry?.id === "SF";
-                const isCreditSf = creditEntry?.id === "SF";
+        const debitEntry = debitRows[index];
+        const creditEntry = creditRows[index];
+        const debitLabel = debitEntry ? `${debitEntry.id} ${debitEntry.description}` : "";
+        const creditLabel = creditEntry ? `${creditEntry.id} ${creditEntry.description}` : "";
+        const isDebitSf = debitEntry?.id === "SF";
+        const isCreditSf = creditEntry?.id === "SF";
+        const debitAmount = isDebitSf ? line.netValue : debitEntry?.amount;
+        const creditAmount = isCreditSf ? line.netValue : creditEntry?.amount;
 
-                return (
-                  <Box
-                    key={`${line.accountId}-${index}`}
-                    sx={{
+        return (
+          <Box
+            key={`${line.accountId}-${index}`}
+            sx={{
                       borderBottom: `1px solid ${accentColor}`,
                       display: "grid",
                       gridTemplateColumns: "2fr 1fr 1fr 2fr",
@@ -139,7 +141,7 @@ export default function LedgerTable(props: LedgerTableProps): JSX.Element {
                       }}
                       variant="body2"
                     >
-                      {debitEntry ? formatCurrency(debitEntry.amount) : ""}
+                      {debitEntry && debitAmount !== undefined ? formatCurrency(debitAmount) : ""}
                     </Typography>
                     <Typography
                       sx={{
@@ -148,7 +150,7 @@ export default function LedgerTable(props: LedgerTableProps): JSX.Element {
                       }}
                       variant="body2"
                     >
-                      {creditEntry ? formatCurrency(creditEntry.amount) : ""}
+                      {creditEntry && creditAmount !== undefined ? formatCurrency(creditAmount) : ""}
                     </Typography>
                     <Typography
                       sx={{
