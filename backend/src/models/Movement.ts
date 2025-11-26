@@ -6,6 +6,8 @@ export interface Movement {
   amount: number;
   date: number;
   description: string;
+  fromAccount?: string;
   productId?: string;
+  toAccount?: string;
   type: MovementType;
 }

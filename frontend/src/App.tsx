@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
 import MovementsPage from "./pages/MovementsPage";
+import BalancePage from "./pages/BalancePage";
 import ReportsPage from "./pages/ReportsPage";
 
 /** Container principal da aplicação com as rotas das páginas.
@@ -15,6 +16,7 @@ export default function App() {
         <Route element={<DashboardPage />} path="/dashboard" />
         <Route element={<MovementsPage />} path="/movimentacoes" />
         <Route element={<ReportsPage />} path="/relatorios" />
+        <Route element={<BalancePage />} path="/balanco" />
       </Routes>
     </AppLayout>
   );

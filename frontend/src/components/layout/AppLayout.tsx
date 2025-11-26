@@ -69,6 +69,18 @@ export default function AppLayout(props: AppLayoutProps) {
             >
               Relatórios
             </Button>
+            <Button
+              color="inherit"
+              component={Link}
+              sx={{
+                fontWeight: isActive("/balanco") ? 700 : 500,
+                opacity: isActive("/balanco") ? 1 : 0.85,
+              }}
+              to="/balanco"
+              variant={isActive("/balanco") ? "contained" : "text"}
+            >
+              Balanço
+            </Button>
           </Stack>
         </Toolbar>
       </AppBar>

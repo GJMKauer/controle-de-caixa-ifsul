@@ -40,53 +40,5 @@
     "name": "Impressora Laser",
     "unitPrice": 1550,
     "account": "equipamentos-informatica"
-  },
-  {
-    "id": "prod-008",
-    "name": "Campanha Anúncios Digitais",
-    "unitPrice": 1800,
-    "account": "marketing"
-  },
-  {
-    "id": "prod-009",
-    "name": "Contrato de Manutenção Predial",
-    "unitPrice": 950,
-    "account": "manutencao"
-  },
-  {
-    "id": "prod-010",
-    "name": "Serviço de Limpeza",
-    "unitPrice": 450,
-    "account": "servicos-gerais"
-  },
-  {
-    "id": "prod-011",
-    "name": "Treinamento Equipe",
-    "unitPrice": 1300,
-    "account": "investimentos"
-  },
-  {
-    "id": "prod-012",
-    "name": "Consultoria Financeira",
-    "unitPrice": 2100,
-    "account": "investimentos"
-  },
-  {
-    "id": "prod-013",
-    "name": "Pacote de Redes Sociais",
-    "unitPrice": 600,
-    "account": "marketing"
-  },
-  {
-    "id": "prod-014",
-    "name": "Seguro Equipamentos",
-    "unitPrice": 780,
-    "account": "manutencao"
-  },
-  {
-    "id": "prod-015",
-    "name": "Assinatura SaaS",
-    "unitPrice": 320,
-    "account": "servicos-gerais"
   }
 ]

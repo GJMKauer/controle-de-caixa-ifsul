@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { getAccounts, getDailySummary } from "../api/cashApi";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
 import { Account, Summary } from "../types/cash";
@@ -43,10 +43,6 @@ export default function DashboardPage() {
           Data: {getTodayInputDate()}
         </Typography>
       </Stack>
-      <Alert severity="info" variant="outlined">
-        Os dados iniciais exibidos são mockados; assim que você registrar uma nova movimentação, apenas os dados reais
-        passam a ser considerados.
-      </Alert>
       <Box display="grid" gap={2} gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}>
         <CashSummaryCard subtitle="Entradas" value={summary.totalIncome} />
         <CashSummaryCard color="rgba(230, 126, 34, 1)" subtitle="Saídas" value={summary.totalOutcome} />

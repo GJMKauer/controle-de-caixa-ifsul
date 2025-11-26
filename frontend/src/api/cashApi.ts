@@ -1,5 +1,5 @@
 import { httpClient } from "./httpClient";
-import { Account, Movement, MovementPayload, Product, Summary } from "../types/cash";
+import { Account, AssetInput, BalanceSheet, Movement, MovementPayload, Product, Summary } from "../types/cash";
 
 export interface MovementFilters {
   from?: string;
@@ -62,7 +62,7 @@ const getAccounts = async (): Promise<Array<Account>> => {
   return response.data;
 };
 
-/** Lista produtos mockados.
+/** Lista produtos disponíveis.
  * @returns Produtos disponíveis.
  */
 const getProducts = async (): Promise<Array<Product>> => {
@@ -71,4 +71,44 @@ const getProducts = async (): Promise<Array<Product>> => {
   return response.data;
 };
 
-export { createMovement, getAccounts, getDailySummary, getPeriodSummary, getProducts, listMovements };
+/** Cria um ativo patrimonial.
+ * @param payload - Dados do ativo.
+ * @returns Ativo criado.
+ */
+const createAsset = async (payload: AssetInput) => {
+  const response = await httpClient.post("/assets", payload);
+
+  return response.data;
+};
+
+/** Obtém balanço patrimonial com depreciação.
+ * @returns Balanço consolidado.
+ */
+const getBalanceSheet = async (month?: string): Promise<BalanceSheet> => {
+  const filters =
+    month && month.includes("-")
+      ? (() => {
+          const [year, monthPart] = month.split("-");
+          const start = `01/${monthPart}/${year}`;
+          const endDate = new Date(Number(year), Number(monthPart), 0);
+          const end = `${String(endDate.getDate()).padStart(2, "0")}/${monthPart}/${year}`;
+
+          return { from: start, to: end };
+        })()
+      : undefined;
+
+  const response = await httpClient.get<BalanceSheet>("/balance", { params: filters });
+
+  return response.data;
+};
+
+export {
+  createAsset,
+  createMovement,
+  getAccounts,
+  getBalanceSheet,
+  getDailySummary,
+  getPeriodSummary,
+  getProducts,
+  listMovements,
+};

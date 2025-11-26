@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import {
+  createAsset,
   createMovement,
   getAccounts,
+  getBalanceSheet,
   getDailySummary,
   getPeriodSummary,
   getProducts,
@@ -45,6 +47,46 @@ const handleCreateMovement = async (
     return response.status(201).json(movement);
   } catch (error) {
     return response.status(400).json({ message: (error as Error).message });
+  }
+};
+
+/** Handler para criação de um ativo patrimonial.
+ * @param request - Objeto Request do Express.
+ * @param response - Objeto Response do Express.
+ * @returns Ativo criado.
+ */
+const handleCreateAsset = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  try {
+    const asset = await createAsset(request.body);
+
+    return response.status(201).json(asset);
+  } catch (error) {
+    return response.status(400).json({ message: (error as Error).message });
+  }
+};
+
+/** Handler para balanço patrimonial.
+ * @param _request - Objeto Request do Express.
+ * @param response - Objeto Response do Express.
+ * @returns Balanço consolidado.
+ */
+const handleBalanceSheet = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  try {
+    const { from, to } = request.query;
+    const balance = await getBalanceSheet(
+      typeof from === "string" ? from : undefined,
+      typeof to === "string" ? to : undefined
+    );
+
+    return response.json(balance);
+  } catch (error) {
+    return response.status(500).json({ message: (error as Error).message });
   }
 };
 
@@ -133,6 +175,8 @@ const handleListProducts = async (
 };
 
 export {
+  handleBalanceSheet,
+  handleCreateAsset,
   handleCreateMovement,
   handleDailySummary,
   handleListAccounts,

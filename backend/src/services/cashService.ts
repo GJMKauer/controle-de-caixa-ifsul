@@ -1,11 +1,12 @@
 import { randomUUID } from "crypto";
 import { Account } from "../models/Account";
+import { Asset } from "../models/Asset";
 import { Movement, MovementType } from "../models/Movement";
 import { Product } from "../models/Product";
+import { addAsset, fetchAssets } from "../repositories/assetRepository";
 import {
   appendMovement,
   fetchAccounts,
-  fetchMockMovements,
   fetchMovements,
   fetchProducts,
   saveAccounts,
@@ -16,6 +17,8 @@ interface MovementInput {
   amount: number;
   date: number | string;
   description: string;
+  fromAccount?: string;
+  toAccount?: string;
   productId?: string;
   type: MovementType;
 }
@@ -28,6 +31,33 @@ interface Summary {
 
 interface SummaryWithMovements extends Summary {
   movements: Movement[];
+}
+
+export interface AssetInput {
+  accountId: string;
+  acquisitionDate: string;
+  cost: number;
+  name: string;
+}
+
+interface AssetBalanceLine {
+  accountId: string;
+  accountName: string;
+  depreciation: number;
+  netValue: number;
+  rate: number;
+  totalCost: number;
+}
+
+interface BalanceSheet {
+  assets: AssetBalanceLine[];
+  date: number;
+  equity: number;
+  liabilities: AssetBalanceLine[];
+  totals: {
+    assets: number;
+    liabilities: number;
+  };
 }
 
 /** Normaliza uma string de data em partes (dia, mês, ano).
@@ -117,6 +147,28 @@ const getDayStart = (value: string): number =>
  */
 const getDayEnd = (value: string): number => parseDateToTimestamp(value, "end");
 
+/** Calcula depreciação linear de um bem com base na taxa anual.
+ * @param asset - Ativo avaliado.
+ * @param annualRate - Taxa anual em percentual.
+ * @param referenceDate - Data de referência para cálculo.
+ * @returns Valor depreciação acumulada.
+ */
+const calculateDepreciation = (
+  asset: Asset,
+  annualRate: number,
+  referenceDate: number
+): number => {
+  if (!annualRate || annualRate <= 0) {
+    return 0;
+  }
+
+  const elapsedMs = Math.max(0, referenceDate - asset.acquisitionDate);
+  const years = elapsedMs / (365 * 24 * 60 * 60 * 1000);
+  const depreciation = (asset.cost * annualRate * years) / 100;
+
+  return Math.min(depreciation, asset.cost);
+};
+
 /** Filtra movimentações por intervalo de datas, inclusive.
  * @param movements - Movimentações base.
  * @param from - Data inicial (dd/MM/yyyy) opcional.
@@ -184,11 +236,6 @@ const listMovements = async (
   );
 };
 
-/** Recupera apenas os mock de movimentações.
- * @returns Lista mockada.
- */
-const listMockMovements = async (): Promise<Movement[]> => fetchMockMovements();
-
 /** Atualiza o saldo de uma conta com base em uma movimentação.
  * @param accounts - Lista de contas atual.
  * @param movement - Movimentação a aplicar.
@@ -214,6 +261,45 @@ const applyMovementToAccounts = (
   updated[targetIndex] = target;
 
   return updated;
+};
+
+/** Cria um novo bem patrimonial vinculado a uma conta.
+ * @param payload - Dados do ativo.
+ * @returns Ativo criado.
+ */
+const createAsset = async (payload: AssetInput): Promise<Asset> => {
+  const accounts = await fetchAccounts();
+  const targetAccount = accounts.find(
+    (account) => account.id === payload.accountId
+  );
+
+  if (!targetAccount) {
+    throw new Error("Conta informada não existe");
+  }
+
+  if (targetAccount.category !== "ASSET") {
+    throw new Error("A conta precisa ser de ativo para registrar um bem");
+  }
+
+  const cost = Number(payload.cost);
+
+  if (!Number.isFinite(cost) || cost <= 0) {
+    throw new Error("Custo do bem inválido");
+  }
+
+  const acquisitionDate = parseDateToTimestamp(payload.acquisitionDate);
+
+  const asset: Asset = {
+    accountId: payload.accountId,
+    acquisitionDate,
+    cost,
+    id: randomUUID(),
+    name: payload.name,
+  };
+
+  await addAsset(asset);
+
+  return asset;
 };
 
 /** Cria uma movimentação, persiste e retorna a versão final.
@@ -282,19 +368,111 @@ const getPeriodSummary = async (
  */
 const getAccounts = async (): Promise<Account[]> => fetchAccounts();
 
-/** Lista os produtos mockados.
+/** Lista os produtos cadastrados.
  * @returns Lista de produtos disponíveis.
  */
 const getProducts = async (): Promise<Product[]> => fetchProducts();
 
+/** Monta o balanço patrimonial com depreciação.
+ * @returns Estrutura de balanço.
+ */
+const getBalanceSheet = async (
+  from?: string,
+  to?: string
+): Promise<BalanceSheet> => {
+  const [accounts, assets, movements] = await Promise.all([
+    fetchAccounts(),
+    fetchAssets(),
+    fetchMovements(),
+  ]);
+  const filteredMovements = filterByDateRange(movements, from, to);
+  const referenceDate = to ? getDayEnd(to) : Date.now();
+
+  const assetLines: AssetBalanceLine[] = accounts
+    .filter((account) => account.category === "ASSET")
+    .map((account) => {
+      const relatedAssets = assets.filter(
+        (asset) => asset.accountId === account.id
+      );
+      const rate = account.depreciationRateAnnual ?? 0;
+
+      if (relatedAssets.length === 0) {
+        const totalCost = account.currentBalance;
+
+        return {
+          accountId: account.id,
+          accountName: account.name,
+          depreciation: 0,
+          netValue: totalCost,
+          rate,
+          totalCost,
+        };
+      }
+
+      const depreciation = relatedAssets.reduce(
+        (accumulator, asset) =>
+          accumulator + calculateDepreciation(asset, rate, referenceDate),
+        0
+      );
+      const totalCost = relatedAssets.reduce(
+        (accumulator, asset) => accumulator + asset.cost,
+        0
+      );
+      const netValue = Math.max(0, totalCost - depreciation);
+
+      return {
+        accountId: account.id,
+        accountName: account.name,
+        depreciation,
+        netValue,
+        rate,
+        totalCost,
+      };
+    });
+
+  const liabilityLines: AssetBalanceLine[] = accounts
+    .filter((account) => account.category === "LIABILITY")
+    .map((account) => ({
+      accountId: account.id,
+      accountName: account.name,
+      depreciation: 0,
+      netValue: account.currentBalance,
+      rate: 0,
+      totalCost: account.currentBalance,
+    }));
+
+  const assetsTotal = assetLines.reduce(
+    (accumulator, line) => accumulator + line.netValue,
+    0
+  );
+  const liabilitiesTotal = liabilityLines.reduce(
+    (accumulator, line) => accumulator + line.netValue,
+    0
+  );
+  const equity = assetsTotal - liabilitiesTotal;
+
+  return {
+    assets: assetLines,
+    date: referenceDate,
+    equity,
+    liabilities: liabilityLines,
+    totals: {
+      assets: assetsTotal,
+      liabilities: liabilitiesTotal,
+    },
+  };
+};
+
 export {
+  calculateDepreciation,
   applyMovementToAccounts,
   buildSummary,
+  createAsset,
   createMovement,
   getAccounts,
+  getBalanceSheet,
   getDailySummary,
   getPeriodSummary,
   getProducts,
-  listMockMovements,
   listMovements,
 };

@@ -25,7 +25,9 @@ export interface CashTableProps {
 const getTypeLabel = (type: MovementType): string => (type === "INCOME" ? "Entrada" : "Saída");
 
 /** Tabela para listagem de movimentações.
- * @param props - Propriedades do componente.
+ * @param accountNames - Mapeamento de nomes das contas.
+ * @param emptyMessage - Mensagem exibida quando não há movimentações.
+ * @param movements - Movimentações a serem exibidas.
  * @returns Tabela renderizada.
  */
 export default function CashTable(props: CashTableProps) {
@@ -62,9 +64,15 @@ export default function CashTable(props: CashTableProps) {
               </TableCell>
               <TableCell>
                 <Chip
-                  color={movement.type === "INCOME" ? "secondary" : "default"}
                   label={getTypeLabel(movement.type)}
                   size="small"
+                  sx={{
+                    backgroundColor: movement.type === "INCOME" ? "rgba(0, 184, 148, 1)" : "rgba(230, 126, 34, 1)",
+                    color: "white",
+                    minWidth: 80,
+                    textAlign: "center",
+                  }}
+                  variant="filled"
                 />
               </TableCell>
             </TableRow>

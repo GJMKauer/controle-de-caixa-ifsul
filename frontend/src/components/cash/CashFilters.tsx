@@ -25,7 +25,7 @@ export default function CashFilters(props: CashFiltersProps) {
   const handleSubmit = (): void => {
     onApply({
       from: from || undefined,
-      to: to || undefined
+      to: to || undefined,
     });
   };
 

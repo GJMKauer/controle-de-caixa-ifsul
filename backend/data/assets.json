@@ -1,0 +1,16 @@
+[
+  {
+    "id": "asset-001",
+    "name": "Lote de Cadeiras",
+    "accountId": "moveis-utensilios",
+    "acquisitionDate": 1704067200000,
+    "cost": 2500
+  },
+  {
+    "id": "asset-002",
+    "name": "Servidores e Notebooks",
+    "accountId": "equipamentos-informatica",
+    "acquisitionDate": 1706745600000,
+    "cost": 6000
+  }
+]

@@ -1,1 +1,65 @@
-[]
+[
+  {
+    "id": "mov-001",
+    "type": "INCOME",
+    "description": "Venda balcão",
+    "date": 1732233600000,
+    "amount": 1800,
+    "account": "caixa",
+    "productId": "prod-006"
+  },
+  {
+    "id": "mov-002",
+    "type": "OUTCOME",
+    "description": "Compra de mercadorias fornecedor local",
+    "date": 1732060800000,
+    "amount": 1400,
+    "account": "mercadorias",
+    "fromAccount": "bancos",
+    "toAccount": "mercadorias",
+    "productId": "prod-006"
+  },
+  {
+    "id": "mov-003",
+    "type": "INCOME",
+    "description": "Recebimento boleto cliente",
+    "date": 1732147200000,
+    "amount": 3200,
+    "account": "bancos"
+  },
+  {
+    "id": "mov-004",
+    "type": "OUTCOME",
+    "description": "Compra de cadeiras para escritório",
+    "date": 1731196800000,
+    "amount": 1700,
+    "account": "moveis-utensilios",
+    "fromAccount": "bancos",
+    "toAccount": "moveis-utensilios",
+    "productId": "prod-001"
+  },
+  {
+    "id": "mov-005",
+    "type": "INCOME",
+    "description": "Consultoria financeira concluída",
+    "date": 1731888000000,
+    "amount": 2100,
+    "account": "bancos"
+  },
+  {
+    "id": "mov-006",
+    "type": "OUTCOME",
+    "description": "Pagamento de aluguel",
+    "date": 1731888000000,
+    "amount": 2200,
+    "account": "caixa"
+  },
+  {
+    "id": "mov-007",
+    "type": "INCOME",
+    "description": "Venda online marketplace",
+    "date": 1732492800000,
+    "amount": 2750,
+    "account": "bancos"
+  }
+]

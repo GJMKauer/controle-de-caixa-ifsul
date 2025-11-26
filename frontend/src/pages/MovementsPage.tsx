@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { createMovement, getAccounts, getProducts, listMovements, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashForm from "../components/cash/CashForm";
@@ -73,9 +73,6 @@ export default function MovementsPage() {
         </Stack>
         <CashFilters defaultFrom={filters.from} defaultTo={filters.to} onApply={handleApplyFilters} />
       </Stack>
-      <Alert severity="info" variant="outlined">
-        Dados iniciais são mockados. Após registrar uma movimentação real, somente os dados verdadeiros serão exibidos.
-      </Alert>
       <Box display="grid" gap={3} gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}>
         <CashTable accountNames={accountNames} movements={movements} />
         <Paper sx={{ padding: 3 }}>

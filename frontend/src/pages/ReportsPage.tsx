@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { getAccounts, getPeriodSummary, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
@@ -61,10 +61,6 @@ export default function ReportsPage() {
         </Stack>
         <CashFilters defaultFrom={filters.from} defaultTo={filters.to} onApply={handleFilters} />
       </Stack>
-      <Alert severity="info" variant="outlined">
-        Os dados iniciais são mockados; depois que uma movimentação real for registrada, somente dados reais serão
-        exibidos.
-      </Alert>
       <Box display="grid" gap={2} gridTemplateColumns={{ md: "repeat(3, 1fr)", xs: "1fr" }}>
         <CashSummaryCard subtitle="Entradas no período" value={summary.totalIncome} />
         <CashSummaryCard color="rgba(230, 126, 34, 1)" subtitle="Saídas no período" value={summary.totalOutcome} />

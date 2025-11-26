@@ -3,90 +3,65 @@
     "id": "caixa",
     "name": "Caixa",
     "initialBalance": 2000,
-    "currentBalance": 2000
+    "currentBalance": 2000,
+    "category": "ASSET"
   },
   {
     "id": "bancos",
     "name": "Bancos",
     "initialBalance": 8000,
-    "currentBalance": 8000
+    "currentBalance": 8000,
+    "category": "ASSET"
   },
   {
     "id": "clientes",
     "name": "Clientes",
     "initialBalance": 0,
-    "currentBalance": 0
+    "currentBalance": 0,
+    "category": "ASSET"
   },
   {
     "id": "mercadorias",
     "name": "Mercadorias",
     "initialBalance": 12000,
-    "currentBalance": 12000
+    "currentBalance": 12000,
+    "category": "ASSET"
   },
   {
     "id": "moveis-utensilios",
     "name": "Móveis e Utensílios",
     "initialBalance": 4000,
-    "currentBalance": 4000
+    "currentBalance": 4000,
+    "category": "ASSET",
+    "depreciationRateAnnual": 10
   },
   {
     "id": "equipamentos-informatica",
     "name": "Equipamentos de Informática",
     "initialBalance": 10000,
-    "currentBalance": 10000
+    "currentBalance": 10000,
+    "category": "ASSET",
+    "depreciationRateAnnual": 20
   },
   {
     "id": "fornecedores",
     "name": "Fornecedores",
     "initialBalance": 3000,
-    "currentBalance": 3000
+    "currentBalance": 3000,
+    "category": "LIABILITY"
   },
   {
-    "id": "impostos",
-    "name": "Impostos a Recolher",
-    "initialBalance": 2000,
-    "currentBalance": 2000
+    "id": "emprestimos",
+    "name": "Empréstimos",
+    "initialBalance": 7000,
+    "currentBalance": 7000,
+    "category": "LIABILITY"
   },
   {
-    "id": "folha-pagamento",
-    "name": "Folha de Pagamento",
-    "initialBalance": 5000,
-    "currentBalance": 5000
-  },
-  {
-    "id": "marketing",
-    "name": "Marketing",
-    "initialBalance": 1500,
-    "currentBalance": 1500
-  },
-  {
-    "id": "manutencao",
-    "name": "Manutenção",
-    "initialBalance": 2000,
-    "currentBalance": 2000
-  },
-  {
-    "id": "servicos-gerais",
-    "name": "Serviços Gerais",
-    "initialBalance": 1000,
-    "currentBalance": 1000
-  },
-  {
-    "id": "investimentos",
-    "name": "Investimentos",
-    "initialBalance": 6000,
-    "currentBalance": 6000
-  },
-  {
-    "id": "adiantamentos-clientes",
-    "name": "Adiantamentos de Clientes",
-    "initialBalance": 800,
-    "currentBalance": 800
-  },
-  {
-    "id": "provisao-decimo",
-    "name": "Provisão 13º",
-    "initialBalance": 2000,
-    "currentBalance": 2000
+    "id": "patrimonio-liquido",
+    "name": "Patrimônio Líquido",
+    "initialBalance": 10000,
+    "currentBalance": 10000,
+    "category": "EQUITY"
   }
 ]
