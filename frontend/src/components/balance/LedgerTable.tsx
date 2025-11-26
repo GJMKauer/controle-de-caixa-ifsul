@@ -91,6 +91,26 @@ export default function LedgerTable(props: LedgerTableProps): JSX.Element {
                   Créditos
                 </Typography>
               </Box>
+              <Box
+                sx={{
+                  borderBottom: `1px solid ${accentColor}`,
+                  display: "grid",
+                  fontWeight: 600,
+                  gridTemplateColumns: "2fr 1fr 1fr 2fr",
+                  padding: 0.5,
+                }}
+              >
+                <Typography variant="body2">Descrição</Typography>
+                <Typography sx={{ textAlign: "right" }} variant="body2">
+                  Valor
+                </Typography>
+                <Typography sx={{ textAlign: "right" }} variant="body2">
+                  Valor
+                </Typography>
+                <Typography sx={{ textAlign: "right" }} variant="body2">
+                  Descrição
+                </Typography>
+              </Box>
               {Array.from({ length: rowCount }, (_item, index) => {
                 const debitEntry = debitRows[index];
                 const creditEntry = creditRows[index];

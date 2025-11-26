@@ -1,5 +1,5 @@
 import { httpClient } from "./httpClient";
-import { Account, AssetInput, BalanceSheet, Movement, MovementPayload, Product, Summary } from "../types/cash";
+import { Account, BalanceSheet, Movement, MovementPayload, Product, Summary } from "../types/cash";
 
 export interface MovementFilters {
   from?: string;
@@ -71,16 +71,6 @@ const getProducts = async (): Promise<Array<Product>> => {
   return response.data;
 };
 
-/** Cria um ativo patrimonial.
- * @param payload - Dados do ativo.
- * @returns Ativo criado.
- */
-const createAsset = async (payload: AssetInput) => {
-  const response = await httpClient.post("/assets", payload);
-
-  return response.data;
-};
-
 /** Obtém balanço patrimonial com depreciação.
  * @returns Balanço consolidado.
  */
@@ -102,13 +92,4 @@ const getBalanceSheet = async (month?: string): Promise<BalanceSheet> => {
   return response.data;
 };
 
-export {
-  createAsset,
-  createMovement,
-  getAccounts,
-  getBalanceSheet,
-  getDailySummary,
-  getPeriodSummary,
-  getProducts,
-  listMovements,
-};
+export { createMovement, getAccounts, getBalanceSheet, getDailySummary, getPeriodSummary, getProducts, listMovements };

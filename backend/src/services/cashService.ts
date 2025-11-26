@@ -3,14 +3,8 @@ import { Account } from "../models/Account";
 import { Asset } from "../models/Asset";
 import { Movement, MovementType } from "../models/Movement";
 import { Product } from "../models/Product";
-import { addAsset, fetchAssets } from "../repositories/assetRepository";
-import {
-  appendMovement,
-  fetchAccounts,
-  fetchMovements,
-  fetchProducts,
-  saveAccounts,
-} from "../repositories/cashRepository";
+import { fetchAssets } from "../repositories/assetRepository";
+import { appendMovement, fetchAccounts, fetchMovements, fetchProducts, saveAccounts } from "../repositories/cashRepository";
 
 interface MovementInput {
   account: string;
@@ -31,13 +25,6 @@ interface Summary {
 
 interface SummaryWithMovements extends Summary {
   movements: Movement[];
-}
-
-export interface AssetInput {
-  accountId: string;
-  acquisitionDate: string;
-  cost: number;
-  name: string;
 }
 
 interface AssetBalanceLine {
@@ -231,9 +218,151 @@ const listMovements = async (
 ): Promise<Movement[]> => {
   const movements = await fetchMovements();
 
-  return filterByDateRange(movements, from, to).sort(
-    (first, second) => second.date - first.date
+  return filterByDateRange(movements, from, to)
+    .map((movement, index) => ({ movement, index }))
+    .sort((first, second) => {
+      if (second.movement.date !== first.movement.date) {
+        return second.movement.date - first.movement.date;
+      }
+
+      return second.index - first.index;
+    })
+    .map((item) => item.movement);
+};
+
+/** Retorna o lado (débito/crédito) apropriado para um delta em uma conta.
+ * @param category - Categoria da conta.
+ * @param delta - Tipo de variação (aumento/diminuição).
+ * @returns Lado da variação.
+ */
+const getSideForDelta = (
+  category: Account["category"],
+  delta: "INCREASE" | "DECREASE"
+): "DEBIT" | "CREDIT" => {
+  const isAsset = category === "ASSET";
+  const isIncrease = delta === "INCREASE";
+
+  if (isAsset) {
+    return isIncrease ? "DEBIT" : "CREDIT";
+  }
+
+  return isIncrease ? "CREDIT" : "DEBIT";
+};
+
+/** Retorna o lado (débito/crédito) apropriado para uma movimentação em uma conta.
+ * @param category - Categoria da conta.
+ * @param type - Tipo da movimentação.
+ * @returns Lado da movimentação.
+ */
+const getSideForMovement = (
+  category: Account["category"],
+  type: Movement["type"]
+): "DEBIT" | "CREDIT" => {
+  if (category === "ASSET") {
+    return type === "INCOME" ? "DEBIT" : "CREDIT";
+  }
+
+  return type === "INCOME" ? "CREDIT" : "DEBIT";
+};
+
+/** Retorna o lado apropriado (débito/crédito) para um delta de transferência. */
+const getTransferDelta = (
+  category: Account["category"],
+  role: "FROM" | "TO"
+): { direction: "INCREASE" | "DECREASE"; side: "DEBIT" | "CREDIT" } => {
+  const isAsset = category === "ASSET";
+  const isLiabilityOrEquity = category === "LIABILITY" || category === "EQUITY";
+
+  const direction: "INCREASE" | "DECREASE" =
+    role === "FROM"
+      ? isAsset
+        ? "DECREASE"
+        : "INCREASE"
+      : isAsset
+      ? "INCREASE"
+      : isLiabilityOrEquity
+      ? "DECREASE"
+      : "INCREASE";
+
+  return {
+    direction,
+    side: getSideForDelta(category, direction),
+  };
+};
+
+/** Recalcula os saldos atuais das contas a partir das movimentações. */
+const computeCurrentBalances = (
+  accounts: Account[],
+  movements: Movement[]
+): Account[] => {
+  const accountById = accounts.reduce<Record<string, Account>>(
+    (accumulator, account) => {
+      accumulator[account.id] = account;
+      return accumulator;
+    },
+    {}
   );
+  const runningBalance = accounts.reduce<Record<string, number>>(
+    (accumulator, account) => {
+      accumulator[account.id] = account.initialBalance;
+      return accumulator;
+    },
+    {}
+  );
+
+  const applyBalanceDelta = (
+    accountId: string,
+    side: "DEBIT" | "CREDIT",
+    amount: number
+  ): void => {
+    const account = accountById[accountId];
+    if (!account) {
+      return;
+    }
+    const isAsset = account.category === "ASSET";
+    const factor = isAsset ? 1 : -1;
+    runningBalance[accountId] += (side === "DEBIT" ? amount : -amount) * factor;
+  };
+
+  const sorted = [...movements].sort(
+    (first, second) => first.date - second.date
+  );
+
+  sorted.forEach((movement) => {
+    if (movement.fromAccount && movement.toAccount) {
+      const from = accountById[movement.fromAccount];
+      const to = accountById[movement.toAccount];
+      if (!from || !to) {
+        return;
+      }
+
+      const fromSide = getTransferDelta(from.category, "FROM").side;
+      const toSide = getTransferDelta(to.category, "TO").side;
+      applyBalanceDelta(movement.fromAccount, fromSide, movement.amount);
+      applyBalanceDelta(movement.toAccount, toSide, movement.amount);
+      return;
+    }
+
+    const account = accountById[movement.account];
+    if (!account) {
+      return;
+    }
+    const side = getSideForMovement(account.category, movement.type);
+    applyBalanceDelta(movement.account, side, movement.amount);
+
+    const counterId = movement.type === "INCOME" ? "clientes" : "fornecedores";
+    const counterAccount = accountById[counterId];
+    if (counterAccount && counterId !== movement.account) {
+      const counterSide: "DEBIT" | "CREDIT" =
+        side === "DEBIT" ? "CREDIT" : "DEBIT";
+      applyBalanceDelta(counterId, counterSide, movement.amount);
+    }
+  });
+
+  return accounts.map((account) => ({
+    ...account,
+    currentBalance: runningBalance[account.id] ?? account.currentBalance,
+  }));
 };
 
 /** Atualiza o saldo de uma conta com base em uma movimentação.
@@ -245,6 +374,45 @@ const applyMovementToAccounts = (
   accounts: Account[],
   movement: Movement
 ): Account[] => {
+  if (movement.fromAccount && movement.toAccount) {
+    const updated = [...accounts];
+    const applyTransferDelta = (
+      accountId: string,
+      role: "FROM" | "TO"
+    ): void => {
+      const account = updated.find((current) => current.id === accountId);
+      if (!account) {
+        throw new Error("Conta informada não existe");
+      }
+
+      const isAsset = account.category === "ASSET";
+      const isLiabilityOrEquity =
+        account.category === "LIABILITY" || account.category === "EQUITY";
+
+      const delta =
+        role === "FROM"
+          ? isAsset
+            ? -movement.amount
+            : movement.amount
+          : isAsset
+          ? movement.amount
+          : isLiabilityOrEquity
+          ? -movement.amount
+          : movement.amount;
+
+      const index = updated.findIndex((current) => current.id === accountId);
+      updated[index] = {
+        ...updated[index],
+        currentBalance: updated[index].currentBalance + delta,
+      };
+    };
+
+    applyTransferDelta(movement.fromAccount, "FROM");
+    applyTransferDelta(movement.toAccount, "TO");
+
+    return updated;
+  }
+
   const targetIndex = accounts.findIndex(
     (account) => account.id === movement.account
   );
@@ -261,45 +429,6 @@ const applyMovementToAccounts = (
   updated[targetIndex] = target;
 
   return updated;
-};
-
-/** Cria um novo bem patrimonial vinculado a uma conta.
- * @param payload - Dados do ativo.
- * @returns Ativo criado.
- */
-const createAsset = async (payload: AssetInput): Promise<Asset> => {
-  const accounts = await fetchAccounts();
-  const targetAccount = accounts.find(
-    (account) => account.id === payload.accountId
-  );
-
-  if (!targetAccount) {
-    throw new Error("Conta informada não existe");
-  }
-
-  if (targetAccount.category !== "ASSET") {
-    throw new Error("A conta precisa ser de ativo para registrar um bem");
-  }
-
-  const cost = Number(payload.cost);
-
-  if (!Number.isFinite(cost) || cost <= 0) {
-    throw new Error("Custo do bem inválido");
-  }
-
-  const acquisitionDate = parseDateToTimestamp(payload.acquisitionDate);
-
-  const asset: Asset = {
-    accountId: payload.accountId,
-    acquisitionDate,
-    cost,
-    id: randomUUID(),
-    name: payload.name,
-  };
-
-  await addAsset(asset);
-
-  return asset;
 };
 
 /** Cria uma movimentação, persiste e retorna a versão final.
@@ -366,7 +495,13 @@ const getPeriodSummary = async (
 /** Recupera as contas com saldos atualizados.
  * @returns Lista de contas.
  */
-const getAccounts = async (): Promise<Account[]> => fetchAccounts();
+const getAccounts = async (): Promise<Account[]> => {
+  const [accounts, movements] = await Promise.all([
+    fetchAccounts(),
+    fetchMovements(),
+  ]);
+  return computeCurrentBalances(accounts, movements);
+};
 
 /** Lista os produtos cadastrados.
  * @returns Lista de produtos disponíveis.
@@ -385,10 +520,15 @@ const getBalanceSheet = async (
     fetchAssets(),
     fetchMovements(),
   ]);
+  const movementsUntilDate = filterByDateRange(movements, undefined, to);
   const filteredMovements = filterByDateRange(movements, from, to);
+  const accountsWithBalance = computeCurrentBalances(
+    accounts,
+    movementsUntilDate
+  );
   const referenceDate = to ? getDayEnd(to) : Date.now();
 
-  const assetLines: AssetBalanceLine[] = accounts
+  const assetLines: AssetBalanceLine[] = accountsWithBalance
     .filter((account) => account.category === "ASSET")
     .map((account) => {
       const relatedAssets = assets.filter(
@@ -430,7 +570,7 @@ const getBalanceSheet = async (
       };
     });
 
-  const liabilityLines: AssetBalanceLine[] = accounts
+  const liabilityLines: AssetBalanceLine[] = accountsWithBalance
     .filter((account) => account.category === "LIABILITY")
     .map((account) => ({
       accountId: account.id,
@@ -467,7 +607,6 @@ export {
   calculateDepreciation,
   applyMovementToAccounts,
   buildSummary,
-  createAsset,
   createMovement,
   getAccounts,
   getBalanceSheet,

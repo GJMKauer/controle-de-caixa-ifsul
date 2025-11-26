@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   handleBalanceSheet,
-  handleCreateAsset,
   handleCreateMovement,
   handleDailySummary,
   handleListAccounts,
@@ -23,7 +22,6 @@ router.get("/balance", handleBalanceSheet);
 
 // Accounts and assets
 router.get("/accounts", handleListAccounts);
-router.post("/assets", handleCreateAsset);
 
 // Products
 router.get("/products", handleListProducts);

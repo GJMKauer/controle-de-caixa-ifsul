@@ -1,67 +1,67 @@
 [
   {
     "id": "caixa",
-    "name": "Caixa",
+    "category": "ASSET",
+    "currentBalance": 13000,
     "initialBalance": 2000,
-    "currentBalance": 2000,
-    "category": "ASSET"
+    "name": "Caixa"
   },
   {
     "id": "bancos",
-    "name": "Bancos",
+    "category": "ASSET",
+    "currentBalance": 13000,
     "initialBalance": 8000,
-    "currentBalance": 8000,
-    "category": "ASSET"
+    "name": "Bancos"
   },
   {
     "id": "clientes",
-    "name": "Clientes",
-    "initialBalance": 0,
-    "currentBalance": 0,
-    "category": "ASSET"
+    "category": "ASSET",
+    "currentBalance": -1000,
+    "initialBalance": 9850,
+    "name": "Clientes"
   },
   {
     "id": "mercadorias",
-    "name": "Mercadorias",
-    "initialBalance": 12000,
+    "category": "ASSET",
     "currentBalance": 12000,
-    "category": "ASSET"
+    "initialBalance": 12000,
+    "name": "Mercadorias"
   },
   {
     "id": "moveis-utensilios",
-    "name": "Móveis e Utensílios",
-    "initialBalance": 4000,
-    "currentBalance": 4000,
     "category": "ASSET",
-    "depreciationRateAnnual": 10
+    "currentBalance": 4000,
+    "depreciationRateAnnual": 10,
+    "initialBalance": 4000,
+    "name": "Móveis e Utensílios"
   },
   {
     "id": "equipamentos-informatica",
-    "name": "Equipamentos de Informática",
-    "initialBalance": 10000,
-    "currentBalance": 10000,
     "category": "ASSET",
-    "depreciationRateAnnual": 20
+    "currentBalance": 10000,
+    "depreciationRateAnnual": 20,
+    "initialBalance": 10000,
+    "name": "Equipamentos de Informática"
   },
   {
     "id": "fornecedores",
-    "name": "Fornecedores",
-    "initialBalance": 3000,
+    "category": "LIABILITY",
     "currentBalance": 3000,
-    "category": "LIABILITY"
+    "initialBalance": 3000,
+    "name": "Fornecedores"
   },
   {
     "id": "emprestimos",
-    "name": "Empréstimos",
+    "category": "LIABILITY",
+    "currentBalance": 10000,
     "initialBalance": 7000,
-    "currentBalance": 7000,
-    "category": "LIABILITY"
+    "name": "Empréstimos"
   },
   {
     "id": "patrimonio-liquido",
-    "name": "Patrimônio Líquido",
-    "initialBalance": 10000,
+    "category": "EQUITY",
     "currentBalance": 10000,
-    "category": "EQUITY"
+    "initialBalance": 10000,
+    "name": "Patrimônio Líquido"
   }
 ]

@@ -1,7 +1,7 @@
 export interface Asset {
-  id: string;
   accountId: string;
   acquisitionDate: number;
   cost: number;
+  id: string;
   name: string;
 }

@@ -1,28 +1,38 @@
-import { useEffect, useMemo, useState } from "react";
-import { Button, MenuItem, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { MovementPayload, MovementType, Account, Product } from "../../types/cash";
+import { useEffect, useState } from "react";
+import {
+  Button,
+  FormControlLabel,
+  MenuItem,
+  Stack,
+  Switch,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
+import { MovementPayload, MovementType, Account } from "../../types/cash";
 import { applyDateMask, getTodayInputDate } from "../../utils/formatters";
 
 export interface CashFormProps {
   accounts: Array<Account>;
   onSubmit: (movement: MovementPayload) => Promise<void> | void;
-  products: Array<Product>;
 }
 
-/**  Formulário para criação de novas movimentações de caixa.
+/** Formulário para criação de novas movimentações de caixa.
  * @param accounts - Contas disponíveis para seleção.
  * @param onSubmit - Callback ao enviar o formulário.
- * @param products - Produtos disponíveis para seleção.
  * @returns Formulário controlado com validações simples.
  */
 export default function CashForm(props: CashFormProps) {
-  const { accounts, onSubmit, products } = props;
+  const { accounts, onSubmit } = props;
 
   const [account, setAccount] = useState(accounts[0]?.id ?? "");
   const [amount, setAmount] = useState("0");
   const [date, setDate] = useState(getTodayInputDate());
   const [description, setDescription] = useState("");
-  const [productId, setProductId] = useState("");
+  const [fromAccount, setFromAccount] = useState("");
+  const [toAccount, setToAccount] = useState("");
+  const [useTransfer, setUseTransfer] = useState(false);
   const [type, setType] = useState<MovementType>("INCOME");
 
   /** Reset os campos após envio bem-sucedido. */
@@ -30,7 +40,9 @@ export default function CashForm(props: CashFormProps) {
     setAmount("0");
     setDate(getTodayInputDate());
     setDescription("");
-    setProductId("");
+    setFromAccount("");
+    setToAccount("");
+    setUseTransfer(false);
     setType("INCOME");
   };
 
@@ -43,39 +55,46 @@ export default function CashForm(props: CashFormProps) {
   const handleSubmit = async (): Promise<void> => {
     const numericAmount = Number(amount);
 
-    if (!description || Number.isNaN(numericAmount) || numericAmount <= 0 || !date || !account) {
+    if (!description || Number.isNaN(numericAmount) || numericAmount <= 0 || !date) {
       return;
     }
 
+    const hasTransfer = useTransfer && fromAccount && toAccount && fromAccount !== toAccount;
+    if (!hasTransfer && !account) {
+      return;
+    }
+
+    const payloadAccount = hasTransfer ? toAccount : account;
     await onSubmit({
-      account,
+      account: payloadAccount,
       amount: numericAmount,
       date,
       description,
-      productId: productId || undefined,
+      fromAccount: hasTransfer ? fromAccount : undefined,
+      toAccount: hasTransfer ? toAccount : undefined,
       type,
     });
 
     resetForm();
   };
 
-  /** Lista de produtos ordenada, priorizando os da conta selecionada. */
-  const productOptions = useMemo(() => {
-    const copy = [...products];
-
-    return copy.sort((first, second) => {
-      const firstMatch = first.account === account ? 1 : 0;
-      const secondMatch = second.account === account ? 1 : 0;
-
-      return secondMatch - firstMatch;
-    });
-  }, [account, products]);
-
   useEffect(() => {
-    if (!account && accounts.length > 0) {
+    if (accounts.length === 0) {
+      return;
+    }
+
+    if (!account) {
       setAccount(accounts[0].id);
     }
-  }, [account, accounts]);
+    if (!fromAccount) {
+      setFromAccount(accounts[0].id);
+    }
+    if (!toAccount && accounts.length > 1) {
+      setToAccount(accounts[1].id);
+    } else if (!toAccount) {
+      setToAccount(accounts[0].id);
+    }
+  }, [account, accounts, fromAccount, toAccount]);
 
   return (
     <Stack spacing={2}>
@@ -108,21 +127,46 @@ export default function CashForm(props: CashFormProps) {
         type="text"
         value={date}
       />
-      <TextField label="Conta" onChange={(event) => setAccount(event.target.value)} select value={account}>
-        {accounts.map((currentAccount) => (
-          <MenuItem key={currentAccount.id} value={currentAccount.id}>
-            {currentAccount.name}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField label="Produto" onChange={(event) => setProductId(event.target.value)} select value={productId}>
-        <MenuItem value="">Nenhum</MenuItem>
-        {productOptions.map((product) => (
-          <MenuItem key={product.id} value={product.id}>
-            {product.name}
-          </MenuItem>
-        ))}
-      </TextField>
+      <FormControlLabel
+        control={<Switch checked={useTransfer} onChange={(_event, checked) => setUseTransfer(checked)} />}
+        label="Transferência entre contas"
+      />
+      {useTransfer ? (
+        <>
+          <TextField
+            label="Conta de origem"
+            onChange={(event) => setFromAccount(event.target.value)}
+            select
+            value={fromAccount}
+          >
+            {accounts.map((currentAccount) => (
+              <MenuItem key={currentAccount.id} value={currentAccount.id}>
+                {currentAccount.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Conta de destino"
+            onChange={(event) => setToAccount(event.target.value)}
+            select
+            value={toAccount}
+          >
+            {accounts.map((currentAccount) => (
+              <MenuItem key={currentAccount.id} value={currentAccount.id}>
+                {currentAccount.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </>
+      ) : (
+        <TextField label="Conta" onChange={(event) => setAccount(event.target.value)} select value={account}>
+          {accounts.map((currentAccount) => (
+            <MenuItem key={currentAccount.id} value={currentAccount.id}>
+              {currentAccount.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
       <Button onClick={handleSubmit} size="large" variant="contained">
         Registrar
       </Button>

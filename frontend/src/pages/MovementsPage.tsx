@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Stack, Typography } from "@mui/material";
-import { createMovement, getAccounts, getProducts, listMovements, MovementFilters } from "../api/cashApi";
+import { createMovement, getAccounts, listMovements, MovementFilters } from "../api/cashApi";
 import CashFilters from "../components/cash/CashFilters";
 import CashForm from "../components/cash/CashForm";
 import CashTable from "../components/cash/CashTable";
-import { Account, Movement, MovementPayload, Product } from "../types/cash";
+import { Account, Movement, MovementPayload } from "../types/cash";
 
 /** Página de listagem e criação de movimentações.
  * @returns Estrutura com filtros, tabela e formulário de criação.
@@ -13,7 +13,6 @@ export default function MovementsPage() {
   const [accounts, setAccounts] = useState<Array<Account>>([]);
   const [filters, setFilters] = useState<MovementFilters>({});
   const [movements, setMovements] = useState<Array<Movement>>([]);
-  const [products, setProducts] = useState<Array<Product>>([]);
 
   /** Mapeia IDs de conta para seus respectivos nomes. */
   const accountNames = useMemo(
@@ -35,9 +34,8 @@ export default function MovementsPage() {
 
   /** Carrega contas e produtos necessários para o formulário. */
   const loadSupportingData = async (): Promise<void> => {
-    const [accountsData, productsData] = await Promise.all([getAccounts(), getProducts()]);
+    const accountsData = await getAccounts();
     setAccounts(accountsData);
-    setProducts(productsData);
   };
 
   /** Trata o envio de um novo registro e recarrega dados.
@@ -76,7 +74,7 @@ export default function MovementsPage() {
       <Box display="grid" gap={3} gridTemplateColumns={{ md: "2fr 1fr", xs: "1fr" }}>
         <CashTable accountNames={accountNames} movements={movements} />
         <Paper sx={{ padding: 3 }}>
-          <CashForm accounts={accounts} onSubmit={handleCreate} products={products} />
+          <CashForm accounts={accounts} onSubmit={handleCreate} />
         </Paper>
       </Box>
     </Stack>

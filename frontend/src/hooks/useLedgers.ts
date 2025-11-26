@@ -36,6 +36,39 @@ const getSideForDelta = (category: Account["category"], delta: "INCREASE" | "DEC
   return isIncrease ? "CREDIT" : "DEBIT";
 };
 
+/** Retorna o delta (aumento/diminuição) e lado (débito/crédito) apropriados para uma transferência entre contas.
+ * @param category - Categoria da conta.
+ * @param role - Papel da conta na transferência (origem/destino).
+ * @returns Delta e lado da transferência.
+ */
+const getTransferDelta = (
+  category: Account["category"],
+  role: "FROM" | "TO"
+): { direction: "DECREASE" | "INCREASE"; side: "CREDIT" | "DEBIT" } => {
+  const isAsset = category === "ASSET";
+  const isLiabilityOrEquity = category === "LIABILITY" || category === "EQUITY";
+
+  if (role === "FROM") {
+    const direction = isAsset ? "DECREASE" : "INCREASE";
+
+    return { direction, side: getSideForDelta(category, direction) };
+  }
+
+  if (isAsset) {
+    const direction = "INCREASE" as const;
+    return { direction, side: getSideForDelta(category, direction) };
+  }
+
+  if (isLiabilityOrEquity) {
+    const direction = "DECREASE" as const;
+    return { direction, side: getSideForDelta(category, direction) };
+  }
+
+  const direction = "INCREASE" as const;
+
+  return { direction, side: getSideForDelta(category, direction) };
+};
+
 interface UseLedgersParams {
   accountById: Record<string, Account>;
   accounts: Array<Account>;
@@ -124,8 +157,8 @@ const useLedgers = (params: UseLedgersParams): LedgerMap => {
           id: entryId,
         };
 
-        const fromSide = getSideForDelta(fromAccount.category, "DECREASE");
-        const toSide = getSideForDelta(toAccount.category, "INCREASE");
+        const fromSide = getTransferDelta(fromAccount.category, "FROM").side;
+        const toSide = getTransferDelta(toAccount.category, "TO").side;
 
         pushEntry(movement.fromAccount, fromSide, baseEntry);
         pushEntry(movement.toAccount, toSide, baseEntry);

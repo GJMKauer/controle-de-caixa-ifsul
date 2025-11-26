@@ -46,21 +46,6 @@ export interface Product {
   unitPrice: number;
 }
 
-export interface Asset {
-  accountId: string;
-  acquisitionDate: number;
-  cost: number;
-  id: string;
-  name: string;
-}
-
-export interface AssetInput {
-  accountId: string;
-  acquisitionDate: string;
-  cost: number;
-  name: string;
-}
-
 export interface BalanceLine {
   accountId: string;
   accountName: string;

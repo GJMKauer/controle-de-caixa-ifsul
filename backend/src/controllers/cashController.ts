@@ -1,14 +1,5 @@
 import { Request, Response } from "express";
-import {
-  createAsset,
-  createMovement,
-  getAccounts,
-  getBalanceSheet,
-  getDailySummary,
-  getPeriodSummary,
-  getProducts,
-  listMovements,
-} from "../services/cashService";
+import { createMovement, getAccounts, getBalanceSheet, getDailySummary, getPeriodSummary, getProducts, listMovements } from "../services/cashService";
 
 /** Handler para listagem de movimentações com filtros de data.
  * @param request - Objeto Request do Express.
@@ -45,24 +36,6 @@ const handleCreateMovement = async (
     const movement = await createMovement(request.body);
 
     return response.status(201).json(movement);
-  } catch (error) {
-    return response.status(400).json({ message: (error as Error).message });
-  }
-};
-
-/** Handler para criação de um ativo patrimonial.
- * @param request - Objeto Request do Express.
- * @param response - Objeto Response do Express.
- * @returns Ativo criado.
- */
-const handleCreateAsset = async (
-  request: Request,
-  response: Response
-): Promise<Response> => {
-  try {
-    const asset = await createAsset(request.body);
-
-    return response.status(201).json(asset);
   } catch (error) {
     return response.status(400).json({ message: (error as Error).message });
   }
@@ -176,7 +149,6 @@ const handleListProducts = async (
 
 export {
   handleBalanceSheet,
-  handleCreateAsset,
   handleCreateMovement,
   handleDailySummary,
   handleListAccounts,

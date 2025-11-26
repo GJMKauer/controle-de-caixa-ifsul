@@ -48,35 +48,44 @@ export default function CashTable(props: CashTableProps) {
           <TableRow>
             <TableCell>Data</TableCell>
             <TableCell>Descrição</TableCell>
-            <TableCell>Conta</TableCell>
+            <TableCell>Conta(s)</TableCell>
             <TableCell align="right">Valor</TableCell>
             <TableCell>Tipo</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {movements.map((movement) => (
-            <TableRow key={movement.id}>
-              <TableCell>{formatDate(movement.date)}</TableCell>
-              <TableCell>{movement.description}</TableCell>
-              <TableCell>{accountNames?.[movement.account] ?? capitalize(movement.account)}</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 600 }}>
-                {formatCurrency(movement.amount)}
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={getTypeLabel(movement.type)}
-                  size="small"
-                  sx={{
-                    backgroundColor: movement.type === "INCOME" ? "rgba(0, 184, 148, 1)" : "rgba(230, 126, 34, 1)",
-                    color: "white",
-                    minWidth: 80,
-                    textAlign: "center",
-                  }}
-                  variant="filled"
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {movements.map((movement) => {
+            const accountLabel =
+              movement.fromAccount && movement.toAccount
+                ? `${accountNames?.[movement.fromAccount] ?? capitalize(movement.fromAccount)} → ${
+                    accountNames?.[movement.toAccount] ?? capitalize(movement.toAccount)
+                  }`
+                : (accountNames?.[movement.account] ?? capitalize(movement.account));
+
+            return (
+              <TableRow key={movement.id}>
+                <TableCell>{formatDate(movement.date)}</TableCell>
+                <TableCell>{movement.description}</TableCell>
+                <TableCell>{accountLabel}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>
+                  {formatCurrency(movement.amount)}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={getTypeLabel(movement.type)}
+                    size="small"
+                    sx={{
+                      backgroundColor: movement.type === "INCOME" ? "rgba(0, 184, 148, 1)" : "rgba(230, 126, 34, 1)",
+                      color: "white",
+                      minWidth: 80,
+                      textAlign: "center",
+                    }}
+                    variant="filled"
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
