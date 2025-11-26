@@ -1,17 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Box,
-  Grid,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { ptBR } from "date-fns/locale";
 import { getAccounts, getBalanceSheet, listMovements, MovementFilters } from "../api/cashApi";
 import LedgerTable from "../components/balance/LedgerTable";
 import CashSummaryCard from "../components/cash/CashSummaryCard";
@@ -36,6 +27,17 @@ export default function BalancePage(): JSX.Element {
 
   const [monthFilter, setMonthFilter] = useState<string>(getPreviousMonth());
   const maxMonth = getPreviousMonth();
+  const maxDate = useMemo(() => {
+    const [year, monthPart] = maxMonth.split("-").map(Number);
+    return new Date(year, (monthPart ?? 1) - 1, 1);
+  }, [maxMonth]);
+  const monthValue = useMemo(() => {
+    const [year, monthPart] = monthFilter.split("-").map(Number);
+    if (!year || !monthPart) {
+      return null;
+    }
+    return new Date(year, (monthPart ?? 1) - 1, 1);
+  }, [monthFilter]);
 
   /** Converte filtro mensal (YYYY-MM) para datas do mês. */
   const transformMonthToFilters = (month: string): MovementFilters | undefined => {
@@ -151,20 +153,28 @@ export default function BalancePage(): JSX.Element {
         </Typography>
       </Stack>
       <Box display="grid" gap={2} gridTemplateColumns={{ md: "1fr 1fr", xs: "1fr" }}>
-        <TextField
-          InputLabelProps={{ shrink: true }}
-          inputProps={{ max: maxMonth }}
-          label="Mês de referência"
-          onChange={(event) => {
-            const next = event.target.value;
-            if (next && next > maxMonth) {
-              return;
-            }
-            setMonthFilter(next);
-          }}
-          type="month"
-          value={monthFilter}
-        />
+        <LocalizationProvider adapterLocale={ptBR} dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Mês de referência"
+            maxDate={maxDate}
+            onChange={(newValue) => {
+              if (!newValue) {
+                return;
+              }
+              const next = `${newValue.getFullYear()}-${String(newValue.getMonth() + 1).padStart(2, "0")}`;
+              if (next && next > maxMonth) {
+                return;
+              }
+              setMonthFilter(next);
+            }}
+            slotProps={{
+              actionBar: { actions: ["clear"] },
+              textField: { InputLabelProps: { shrink: true } },
+            }}
+            value={monthValue}
+            views={["year", "month"]}
+          />
+        </LocalizationProvider>
         <Box />
       </Box>
       {balance ? (
